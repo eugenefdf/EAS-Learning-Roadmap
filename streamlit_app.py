@@ -2,13 +2,13 @@ import streamlit as st
 import pandas as pd
 
 # Step 1: Load the CSV files from the GitHub repository
-programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"  
-df = pd.read_csv(programmes_url)
+programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"
+programmes_df = pd.read_csv(programmes_url)
 
-BI_url =
-df = pd.read_csv(BI_url)
+BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
+bi_df = pd.read_csv(BI_url)
 
-# Step 2: Define columns representing roles and simplified names for checkboxes
+# Step 2: Define columns representing roles and simplified names for checkboxes for the programmes table
 role_columns_full = {
     'Type of Course - Vice Principal (Admin) [VP(A)]': 'Vice Principal (Admin) [VP(A)]',
     'Type of Course - Adminstrative Manager [AM]': 'Adminstrative Manager [AM]',
@@ -25,19 +25,19 @@ role_columns_full = {
 }
 
 # Step 3: Create checkboxes dynamically in the sidebar for role selection (initially unticked)
-st.sidebar.header("Select Roles to Display")
-selected_columns = []
+st.sidebar.header("Select Roles to Display for Programmes")
+selected_columns_programmes = []
 for full_column, simple_column in role_columns_full.items():
     # Display simplified names in checkboxes
     if st.sidebar.checkbox(simple_column, value=False):
-        selected_columns.append(full_column)
+        selected_columns_programmes.append(full_column)
 
 # Step 4: If no roles are selected, display a warning
-if not selected_columns:
-    st.warning("Please select at least one role to display.")
+if not selected_columns_programmes:
+    st.warning("Please select at least one role to display from the Programmes table.")
 else:
     # Step 5: Filter the DataFrame to show only selected roles with simplified headers
-    filtered_df = df[['Dimension', 'Learning Area'] + selected_columns + [
+    filtered_programmes_df = programmes_df[['Dimension', 'Learning Area'] + selected_columns_programmes + [
         'Application Basis (Sign up/ Nomination)',
         'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
         'E-learning link',
@@ -46,15 +46,54 @@ else:
     ]]
 
     # Rename the columns with simplified headers
-    simplified_headers = ['Dimension', 'Learning Area'] + [role_columns_full[col] for col in selected_columns] + [
+    simplified_headers_programmes = ['Dimension', 'Learning Area'] + [role_columns_full[col] for col in selected_columns_programmes] + [
         'Application Basis (Sign up/ Nomination)',
         'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
         'E-learning link',
         'Estimated Month of Programme',
         'Remarks'
     ]
-    filtered_df.columns = simplified_headers
-    
+    filtered_programmes_df.columns = simplified_headers_programmes
+
     # Step 6: Display the filtered DataFrame with simplified headers
-    st.write("### Filtered Data")
-    st.dataframe(filtered_df)
+    st.write("### Filtered Programmes Data")
+    st.dataframe(filtered_programmes_df)
+
+# Step 7: Define columns representing roles for the Behavioural Indicators table
+role_columns_bi_full = {
+    'Behavioural Indicators - Vice Principal (Admin) [VP(A)]': 'Vice Principal (Admin) [VP(A)]',
+    'Behavioural Indicators - Adminstrative Manager [AM]': 'Adminstrative Manager [AM]',
+    'Behavioural Indicators - Operation Manager [OM]': 'Operation Manager [OM]',
+    'Behavioural Indicators - Assistant Operation Manager/SLT [Assistant OM/SLT]': 'Assistant Operation Manager/SLT [Assistant OM/SLT]',
+    'Behavioural Indicators - ICT Manager': 'ICT Manager',
+    'Behavioural Indicators - Cluster ICT Manager': 'Cluster ICT Manager',
+    'Behavioural Indicators - STEM Instructor (Workshop)': 'STEM Instructor (Workshop)',
+    'Behavioural Indicators - STEM Instructor (Laboratory)': 'STEM Instructor (Laboratory)',
+    'Behavioural Indicators - Corporate Support Officer [CSO]': 'Corporate Support Officer [CSO]',
+    'Behavioural Indicators - Admin Executive [AE]': 'Admin Executive [AE]',
+    'Behavioural Indicators - Technical Support Officer (Audio Visual) [TSO (AV)]': 'Technical Support Officer (Audio Visual) [TSO (AV)]',
+    'Behavioural Indicators - Operation Support Officer [OSO]': 'Operation Support Officer [OSO]'
+}
+
+# Step 8: Create checkboxes dynamically in the sidebar for role selection for Behavioural Indicators table
+st.sidebar.header("Select Roles to Display for Behavioural Indicators")
+selected_columns_bi = []
+for full_column, simple_column in role_columns_bi_full.items():
+    # Display simplified names in checkboxes
+    if st.sidebar.checkbox(simple_column, value=False):
+        selected_columns_bi.append(full_column)
+
+# Step 9: If no roles are selected for Behavioural Indicators, display a warning
+if not selected_columns_bi:
+    st.warning("Please select at least one role to display from the Behavioural Indicators table.")
+else:
+    # Step 10: Filter the DataFrame to show only selected roles with simplified headers
+    filtered_bi_df = bi_df[['Sector', 'Dimension/ Learning Area'] + selected_columns_bi]
+
+    # Rename the columns with simplified headers
+    simplified_headers_bi = ['Sector', 'Dimension/ Learning Area'] + [role_columns_bi_full[col] for col in selected_columns_bi]
+    filtered_bi_df.columns = simplified_headers_bi
+
+    # Step 11: Display the filtered DataFrame with simplified headers
+    st.write("### Filtered Behavioural Indicators Data")
+    st.dataframe(filtered_bi_df)
