@@ -49,14 +49,18 @@ if not selected_columns:
 else:
     # Filter and structure the Behavioural Indicators DataFrame
     bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector) & (bi_df['Dimension/ Learning Area'] == selected_dimension)][bi_columns]
+    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector) & 
+                            (bi_df['Dimension/ Learning Area'] == selected_dimension)][bi_columns]
 
     # Display the filtered Behavioural Indicators in a scrollable format
     if not filtered_bi_df.empty:
         # Create a container for the Behavioural Indicators
         st.write("### Behavioural Indicators")
         for col in selected_columns:
+            # Extract the text for the current role column
             bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
+            if not bi_column_text.strip():  # Check if the text is empty
+                bi_column_text = "No data available for this role."
             st.write(f"**{col}:**")
             st.write(bi_column_text)
             st.write("")  # Add an empty line for spacing
