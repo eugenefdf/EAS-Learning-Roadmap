@@ -8,30 +8,31 @@ programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
 bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 
+# Define the role columns
+role_columns = [
+    'Vice Principal (Admin) [VP(A)]',
+    'Adminstrative Manager [AM]',
+    'Operation Manager [OM]',
+    'Assistant Operation Manager/SLT [Assistant OM/SLT]',
+    'ICT Manager',
+    'Cluster ICT Manager',
+    'STEM Instructor (Workshop)',
+    'STEM Instructor (Laboratory)',
+    'Corporate Support Officer [CSO]',
+    'Admin Executive [AE]',
+    'Technical Support Officer (Audio Visual) [TSO (AV)]',
+    'Operation Support Officer [OSO]'
+]
+
 # Set the title of the app
 st.title("EAS Learning Roadmap")
 
-# Add custom CSS for text styling
-st.markdown(
-    """
-    <style>
-    .intro-text {
-        color: #333333; /* Dark grey */
-        font-family: 'Lato', sans-serif; /* Lato font */
-        font-size: 1.1em; /* Slightly larger font size */
-        margin-bottom: 20px; /* Space below the text */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # Introduction text
 st.markdown(
-    '<div class="intro-text">As an MOE EAS officer, you manage a varied spectrum of work so that our schools and HQ divisions can operate effectively and efficiently. \
-    This requires you to be equipped with both core and functional competencies in order to perform your best at work and to thrive well in an increasingly complex operating environment.  \
-    This Learning Roadmap focuses on learning provisions to equip you with the required functional competencies expected of SATs. \
-    For more info on Our Core Competencies (OCC), you may refer to the OCC Guide book* and the SAT Competecy Framework#.</div>', 
+    '<div class="intro-text" style="color: darkgrey; font-family: Lato; font-size: 18px;">As an MOE EAS officer, you manage a varied spectrum of work so that our schools and HQ divisions can operate effectively and efficiently.<br> \
+    This requires you to be equipped with both core and functional competencies in order to perform your best at work and to thrive well in an increasingly complex operating environment.<br> \
+    This Learning Roadmap focuses on learning provisions to equip you with the required functional competencies expected of SATs.<br> \
+    For more info on Our Core Competencies (OCC), you may refer to the OCC Guide book* and the SAT Competency Framework#.</div>',
     unsafe_allow_html=True
 )
 
@@ -71,7 +72,7 @@ else:
                 bi_column_text = "No data available for this role."
             
             # Use st.text_area for long text with scrolling
-            st.text_area(f"**{col}:**", value=bi_column_text, height=150, key=col, max_chars=None)
+            st.text_area(f"**{col}:**", value=bi_column_text.replace("\n", " "), height=200, key=col, max_chars=None)
 
     else:
         st.warning("No Behavioural Indicators found for the selected filters.")
