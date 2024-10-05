@@ -48,8 +48,12 @@ else:
 
     # Display the filtered Behavioural Indicators in a text area
     if not filtered_bi_df.empty:
-        bi_text = filtered_bi_df.drop(columns=['Sector', 'Dimension/ Learning Area']).to_string(index=False)
-        st.text_area("Behavioural Indicators", value=bi_text, height=300)
+        # Assuming the first selected column is the Behavioural Indicator
+        bi_texts = []
+        for col in selected_columns:
+            bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
+            bi_texts.append(f"**{col}:**\n{bi_column_text}\n")
+        st.text_area("Behavioural Indicators", value="\n".join(bi_texts), height=300)
     else:
         st.warning("No Behavioural Indicators found for the selected filters.")
 
