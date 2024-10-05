@@ -8,26 +8,26 @@ programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
 bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 
-# Define the role columns as per the latest structure
-role_columns_full = {
-    'Vice Principal (Admin) [VP(A)]': 'Vice Principal (Admin) [VP(A)]',
-    'Adminstrative Manager [AM]': 'Adminstrative Manager [AM]',
-    'Operation Manager [OM]': 'Operation Manager [OM]',
-    'Assistant Operation Manager/SLT [Assistant OM/SLT]': 'Assistant Operation Manager/SLT [Assistant OM/SLT]',
-    'ICT Manager': 'ICT Manager',
-    'Cluster ICT Manager': 'Cluster ICT Manager',
-    'STEM Instructor (Workshop)': 'STEM Instructor (Workshop)',
-    'STEM Instructor (Laboratory)': 'STEM Instructor (Laboratory)',
-    'Corporate Support Officer [CSO]': 'Corporate Support Officer [CSO]',
-    'Admin Executive [AE]': 'Admin Executive [AE]',
-    'Technical Support Officer (Audio Visual) [TSO (AV)]': 'Technical Support Officer (Audio Visual) [TSO (AV)]',
-    'Operation Support Officer [OSO]': 'Operation Support Officer [OSO]'
-}
+# Define the role columns
+role_columns = [
+    'Vice Principal (Admin) [VP(A)]',
+    'Adminstrative Manager [AM]',
+    'Operation Manager [OM]',
+    'Assistant Operation Manager/SLT [Assistant OM/SLT]',
+    'ICT Manager',
+    'Cluster ICT Manager',
+    'STEM Instructor (Workshop)',
+    'STEM Instructor (Laboratory)',
+    'Corporate Support Officer [CSO]',
+    'Admin Executive [AE]',
+    'Technical Support Officer (Audio Visual) [TSO (AV)]',
+    'Operation Support Officer [OSO]'
+]
 
 # Sidebar for role selection
 st.sidebar.header("Select Roles to Display")
 selected_columns = []
-for full_column in role_columns_full.keys():
+for full_column in role_columns:
     if st.sidebar.checkbox(full_column, value=False):
         selected_columns.append(full_column)
 
@@ -38,13 +38,23 @@ else:
     # Create multi-level columns for the filtered Behavioural Indicators DataFrame
     bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
     bi_multi_columns = pd.MultiIndex.from_tuples([
-        ('', 'Sector'),
-        ('', 'Dimension/ Learning Area')] + [('Behavioural Indicator', col) for col in selected_columns]
-    )
+        ('Behavioural Indicator', 'Vice Principal (Admin) [VP(A)]'),
+        ('Behavioural Indicator', 'Adminstrative Manager [AM]'),
+        ('Behavioural Indicator', 'Operation Manager [OM]'),
+        ('Behavioural Indicator', 'Assistant Operation Manager/SLT [Assistant OM/SLT]'),
+        ('Behavioural Indicator', 'ICT Manager'),
+        ('Behavioural Indicator', 'Cluster ICT Manager'),
+        ('Behavioural Indicator', 'STEM Instructor (Workshop)'),
+        ('Behavioural Indicator', 'STEM Instructor (Laboratory)'),
+        ('Behavioural Indicator', 'Corporate Support Officer [CSO]'),
+        ('Behavioural Indicator', 'Admin Executive [AE]'),
+        ('Behavioural Indicator', 'Technical Support Officer (Audio Visual) [TSO (AV)]'),
+        ('Behavioural Indicator', 'Operation Support Officer [OSO]')
+    ])
 
     # Filter and structure the Behavioural Indicators DataFrame
     filtered_bi_df = bi_df[bi_columns]
-    filtered_bi_df.columns = bi_multi_columns
+    filtered_bi_df.columns = ['Sector', 'Dimension/ Learning Area'] + list(bi_multi_columns)
 
     # Display the filtered Behavioural Indicators DataFrame
     st.write("### Filtered Behavioural Indicators Data")
@@ -58,22 +68,31 @@ else:
         'Estimated Month of Programme',
         'Remarks'
     ]
+    
     programmes_multi_columns = pd.MultiIndex.from_tuples([
-        ('', 'Programme'),
-        ('', 'Entry Type (New/ Recurring)'),
-        ('', 'Sector'),
-        ('', 'Dimension'),
-        ('', 'Learning Area')] + [('Type of Courses', col) for col in selected_columns] + [
-        ('', 'Application Basis (Sign up/ Nomination)'),
-        ('', 'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)'),
-        ('', 'E-learning link'),
-        ('', 'Estimated Month of Programme'),
-        ('', 'Remarks')
+        ('Course Type', 'Vice Principal (Admin) [VP(A)]'),
+        ('Course Type', 'Adminstrative Manager [AM]'),
+        ('Course Type', 'Operation Manager [OM]'),
+        ('Course Type', 'Assistant Operation Manager/SLT [Assistant OM/SLT]'),
+        ('Course Type', 'ICT Manager'),
+        ('Course Type', 'Cluster ICT Manager'),
+        ('Course Type', 'STEM Instructor (Workshop)'),
+        ('Course Type', 'STEM Instructor (Laboratory)'),
+        ('Course Type', 'Corporate Support Officer [CSO]'),
+        ('Course Type', 'Admin Executive [AE]'),
+        ('Course Type', 'Technical Support Officer (Audio Visual) [TSO (AV)]'),
+        ('Course Type', 'Operation Support Officer [OSO]')
     ])
 
     # Filter and structure the Programmes DataFrame
     filtered_programmes_df = programmes_df[programmes_columns]
-    filtered_programmes_df.columns = programmes_multi_columns
+    filtered_programmes_df.columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + list(programmes_multi_columns) + [
+        'Application Basis (Sign up/ Nomination)',
+        'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
+        'E-learning link',
+        'Estimated Month of Programme',
+        'Remarks'
+    ]
 
     # Display the filtered Programmes DataFrame
     st.write("### Filtered Programmes Data")
