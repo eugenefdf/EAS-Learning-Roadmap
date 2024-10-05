@@ -24,6 +24,13 @@ role_columns = [
     'Operation Support Officer [OSO]'
 ]
 
+# Set the title of the app
+st.title("EAS Learning Roadmap")
+
+# Create filters for Sector and Dimension/Learning Area below the title
+selected_sector = st.selectbox("Select Sector", options=bi_df['Sector'].unique())
+selected_dimension = st.selectbox("Select Dimension/Learning Area", options=bi_df['Dimension/ Learning Area'].unique())
+
 # Sidebar for role selection
 st.sidebar.header("Select Roles to Display")
 selected_columns = []
@@ -37,11 +44,14 @@ if not selected_columns:
 else:
     # Filter and structure the Behavioural Indicators DataFrame
     bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-    filtered_bi_df = bi_df[bi_columns]
+    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector) & (bi_df['Dimension/ Learning Area'] == selected_dimension)][bi_columns]
 
-    # Display the filtered Behavioural Indicators DataFrame
-    st.write("### Filtered Behavioural Indicators Data")
-    st.dataframe(filtered_bi_df)
+    # Display the filtered Behavioural Indicators in a text area
+    if not filtered_bi_df.empty:
+        bi_text = filtered_bi_df.drop(columns=['Sector', 'Dimension/ Learning Area']).to_string(index=False)
+        st.text_area("Behavioural Indicators", value=bi_text, height=300)
+    else:
+        st.warning("No Behavioural Indicators found for the selected filters.")
 
     # Create columns for Programmes DataFrame
     programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
