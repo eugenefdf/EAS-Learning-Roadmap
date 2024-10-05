@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
 
-# Step 1: Load the CSV files from the GitHub repository
+# Step 1: Load the CSV files from the GitHub repository with the specified encoding
 programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"
-programmes_df = pd.read_csv(programmes_url)
+programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')  # Specify encoding here
 
 BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
-bi_df = pd.read_csv(BI_url)
+bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')  # Specify encoding here
 
 # Step 2: Define columns representing roles and simplified names for checkboxes for both tables
 role_columns_full = {
