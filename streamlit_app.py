@@ -24,18 +24,6 @@ role_columns = [
     'Operation Support Officer [OSO]'
 ]
 
-# Set the title of the app
-st.title("EAS Learning Roadmap")
-
-# Create filters for Sector and Dimension/Learning Area below the title
-# Get unique sectors from the DataFrame
-unique_sectors = bi_df['Sector'].unique()
-selected_sector = st.selectbox("Select Sector", options=unique_sectors)
-
-# Filter Dimension/Learning Area based on the selected Sector
-filtered_dimension = bi_df[bi_df['Sector'] == selected_sector]['Dimension/ Learning Area'].unique()
-selected_dimension = st.selectbox("Select Dimension/Learning Area", options=filtered_dimension)
-
 # Sidebar for role selection
 st.sidebar.header("Select Roles to Display")
 selected_columns = []
@@ -49,24 +37,14 @@ if not selected_columns:
 else:
     # Filter and structure the Behavioural Indicators DataFrame
     bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector) & 
-                            (bi_df['Dimension/ Learning Area'] == selected_dimension)][bi_columns]
+    filtered_bi_df = bi_df[bi_columns]
 
-    # Display the filtered Behavioural Indicators in a scrollable format using text_area
-    if not filtered_bi_df.empty:
-        # Create a container for the Behavioural Indicators
-        st.write("### Behavioural Indicators")
-        for col in selected_columns:
-            # Extract the text for the current role column
-            bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
-            if not bi_column_text.strip():  # Check if the text is empty
-                bi_column_text = "No data available for this role."
-            
-            # Use st.text_area for long text with scrolling
-            st.text_area(f"**{col}:**", value=bi_column_text, height=300, key=col, max_chars=None)
+    # Display the filtered Behavioural Indicators DataFrame
+    st.write("### Filtered Behavioural Indicators Data")
 
-    else:
-        st.warning("No Behavioural Indicators found for the selected filters.")
+    # Set display options to ensure long text is not cut off
+    pd.set_option('display.max_colwidth', None)  # Disable truncation of column width
+    st.dataframe(filtered_bi_df)
 
     # Create columns for Programmes DataFrame
     programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
