@@ -52,7 +52,7 @@ else:
     filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector) & 
                             (bi_df['Dimension/ Learning Area'] == selected_dimension)][bi_columns]
 
-    # Display the filtered Behavioural Indicators in a scrollable format
+    # Display the filtered Behavioural Indicators in a scrollable format using text_area
     if not filtered_bi_df.empty:
         # Create a container for the Behavioural Indicators
         st.write("### Behavioural Indicators")
@@ -61,9 +61,10 @@ else:
             bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
             if not bi_column_text.strip():  # Check if the text is empty
                 bi_column_text = "No data available for this role."
-            st.write(f"**{col}:**")
-            st.write(bi_column_text)
-            st.write("")  # Add an empty line for spacing
+            
+            # Use st.text_area for long text with scrolling
+            st.text_area(f"**{col}:**", value=bi_column_text, height=200, key=col)
+
     else:
         st.warning("No Behavioural Indicators found for the selected filters.")
 
