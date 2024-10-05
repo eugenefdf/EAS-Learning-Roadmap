@@ -8,7 +8,7 @@ programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')  # Specify en
 BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
 bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')  # Specify encoding here
 
-# Step 2: Define columns representing roles and simplified names for checkboxes for both tables
+# Step 2: Define columns representing roles and simplified names for checkboxes
 role_columns_full = {
     'Type of Course - Vice Principal (Admin) [VP(A)]': 'Vice Principal (Admin) [VP(A)]',
     'Type of Course - Adminstrative Manager [AM]': 'Adminstrative Manager [AM]',
@@ -21,22 +21,10 @@ role_columns_full = {
     'Type of Course - Corporate Support Officer [CSO]': 'Corporate Support Officer [CSO]',
     'Type of Course - Admin Executive [AE]': 'Admin Executive [AE]',
     'Type of Course - Technical Support Officer (Audio Visual) [TSO (AV)]': 'Technical Support Officer (Audio Visual) [TSO (AV)]',
-    'Type of Course - Operation Support Officer [OSO]': 'Operation Support Officer [OSO]',
-    'Behavioural Indicators - Vice Principal (Admin) [VP(A)]': 'Vice Principal (Admin) [VP(A)]',
-    'Behavioural Indicators - Adminstrative Manager [AM]': 'Adminstrative Manager [AM]',
-    'Behavioural Indicators - Operation Manager [OM]': 'Operation Manager [OM]',
-    'Behavioural Indicators - Assistant Operation Manager/SLT [Assistant OM/SLT]': 'Assistant Operation Manager/SLT [Assistant OM/SLT]',
-    'Behavioural Indicators - ICT Manager': 'ICT Manager',
-    'Behavioural Indicators - Cluster ICT Manager': 'Cluster ICT Manager',
-    'Behavioural Indicators - STEM Instructor (Workshop)': 'STEM Instructor (Workshop)',
-    'Behavioural Indicators - STEM Instructor (Laboratory)': 'STEM Instructor (Laboratory)',
-    'Behavioural Indicators - Corporate Support Officer [CSO]': 'Corporate Support Officer [CSO]',
-    'Behavioural Indicators - Admin Executive [AE]': 'Admin Executive [AE]',
-    'Behavioural Indicators - Technical Support Officer (Audio Visual) [TSO (AV)]': 'Technical Support Officer (Audio Visual) [TSO (AV)]',
-    'Behavioural Indicators - Operation Support Officer [OSO]': 'Operation Support Officer [OSO]'
+    'Type of Course - Operation Support Officer [OSO]': 'Operation Support Officer [OSO]'
 }
 
-# Step 3: Create checkboxes dynamically in the sidebar for role selection (initially unticked)
+# Step 3: Create a single set of checkboxes in the sidebar for role selection (initially unticked)
 st.sidebar.header("Select Roles to Display")
 selected_columns = []
 for full_column, simple_column in role_columns_full.items():
