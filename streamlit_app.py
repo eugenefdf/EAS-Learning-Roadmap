@@ -28,8 +28,13 @@ role_columns = [
 st.title("EAS Learning Roadmap")
 
 # Create filters for Sector and Dimension/Learning Area below the title
-selected_sector = st.selectbox("Select Sector", options=bi_df['Sector'].unique())
-selected_dimension = st.selectbox("Select Dimension/Learning Area", options=bi_df['Dimension/ Learning Area'].unique())
+# Get unique sectors from the DataFrame
+unique_sectors = bi_df['Sector'].unique()
+selected_sector = st.selectbox("Select Sector", options=unique_sectors)
+
+# Filter Dimension/Learning Area based on the selected Sector
+filtered_dimension = bi_df[bi_df['Sector'] == selected_sector]['Dimension/ Learning Area'].unique()
+selected_dimension = st.selectbox("Select Dimension/Learning Area", options=filtered_dimension)
 
 # Sidebar for role selection
 st.sidebar.header("Select Roles to Display")
@@ -53,7 +58,10 @@ else:
         for col in selected_columns:
             bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
             bi_texts.append(f"**{col}:**\n{bi_column_text}\n")
-        st.text_area("Behavioural Indicators", value="\n".join(bi_texts), height=300)
+
+        # Use an expander for the Behavioural Indicators text area
+        with st.expander("View Behavioural Indicators", expanded=True):
+            st.text_area("Behavioural Indicators", value="\n".join(bi_texts), height=500)  # Adjust height as needed
     else:
         st.warning("No Behavioural Indicators found for the selected filters.")
 
