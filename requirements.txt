@@ -1,4 +1,6 @@
 python-dotenv
+streamlit
+pandas
 crewai==0.61.0
 crewai-tools==0.12.1
 openai
