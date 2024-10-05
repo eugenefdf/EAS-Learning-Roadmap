@@ -27,20 +27,15 @@ role_columns = [
 # Set the title of the app
 st.title("EAS Learning Roadmap")
 
-# Add an introductory text box
-introduction_text = (
-    "As an MOE EAS officer, you manage a varied spectrum of work so that our schools and HQ divisions can operate effectively and efficiently. "
-    "This requires you to be equipped with both core and functional competencies in order to perform your best at work and to thrive well in an increasingly complex operating environment. "
-    "This Learning Roadmap focuses on learning provisions to equip you with the required functional competencies expected of SATs. "
-    "For more info on Our Core Competencies (OCC), you may refer to the OCC Guide book and the SAT Competency Framework."
-)
-st.text_area("Introduction", value=introduction_text, height=150, disabled=True)
-
-# Add an image at the top (replace with your image URL)
-#image_url = "https://example.com/image.png"  # Replace with your actual image URL
-#st.image(image_url, caption='EAS Learning Roadmap Overview', use_column_width=True)
+# Introduction text
+introduction_text = """
+As an MOE EAS officer, you manage a varied spectrum of work so that our schools and HQ divisions can operate effectively and efficiently. This requires you to be equipped with both core and functional competencies in order to perform your best at work and to thrive well in an increasingly complex operating environment.
+This Learning Roadmap focuses on learning provisions to equip you with the required functional competencies expected of SATs. For more info on Our Core Competencies (OCC), you may refer to the OCC Guide book* and the SAT Competency Framework#.
+"""
+st.markdown(f"<h4 style='color:black; font-size:16px;'>{introduction_text}</h4>", unsafe_allow_html=True)
 
 # Create filters for Sector and Dimension/Learning Area below the title
+# Get unique sectors from the DataFrame
 unique_sectors = bi_df['Sector'].unique()
 selected_sector = st.selectbox("Select Sector", options=unique_sectors)
 
@@ -73,11 +68,8 @@ else:
             bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
             if not bi_column_text.strip():  # Check if the text is empty
                 bi_column_text = "No data available for this role."
-            else:
-                # Replace '\n' with actual new line characters for proper formatting
-                bi_column_text = bi_column_text.replace('\\n', '\n')
-
-            # Use st.text_area for long text with scrolling, reduce height
+            
+            # Use st.text_area for long text with scrolling
             st.text_area(f"**{col}:**", value=bi_column_text, height=150, key=col, max_chars=None)
 
     else:
