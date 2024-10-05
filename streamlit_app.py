@@ -63,7 +63,7 @@ else:
                 bi_column_text = "No data available for this role."
             
             # Use st.text_area for long text with scrolling
-            st.text_area(f"**{col}:**", value=bi_column_text, height=200, key=col)
+            st.text_area(f"**{col}:**", value=bi_column_text, height=300, key=col, max_chars=None)
 
     else:
         st.warning("No Behavioural Indicators found for the selected filters.")
