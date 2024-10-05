@@ -1,8 +1,10 @@
+pip install streamlit
+
 import streamlit as st
 import pandas as pd
 
 # Step 1: Load the Excel file from the GitHub repository
-file_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap\main\SAT Learning Roadmap_FY24_3 Sep 24 (For Testing).xlsx"  # Replace with your actual file URL
+file_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"  # Replace with your actual file URL
 df = pd.read_csv(file_url)
 
 # Step 2: Define columns representing roles and simplified names for checkboxes
