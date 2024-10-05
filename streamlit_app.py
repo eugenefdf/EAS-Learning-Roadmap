@@ -28,7 +28,6 @@ role_columns = [
 st.title("EAS Learning Roadmap")
 
 # Create filters for Sector and Dimension/Learning Area below the title
-# Get unique sectors from the DataFrame
 unique_sectors = bi_df['Sector'].unique()
 selected_sector = st.selectbox("Select Sector", options=unique_sectors)
 
@@ -61,7 +60,10 @@ else:
             bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
             if not bi_column_text.strip():  # Check if the text is empty
                 bi_column_text = "No data available for this role."
-            
+            else:
+                # Replace '\n' with actual new line characters for proper formatting
+                bi_column_text = bi_column_text.replace('\\n', '\n')
+
             # Use st.text_area for long text with scrolling
             st.text_area(f"**{col}:**", value=bi_column_text, height=300, key=col, max_chars=None)
 
