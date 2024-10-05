@@ -1,0 +1,26 @@
+# Installing dotenv
+%pip install python-dotenv --quiet
+
+# Installing crewai and its tools with compatible langchain versions
+%pip install crewai==0.61.0 --quiet
+%pip install crewai-tools==0.12.1 --quiet
+
+# Installing openai and tiktoken
+%pip install openai --quiet
+%pip install tiktoken --quiet
+
+# Installing langchain with compatible versions
+%pip install langchain==0.2.16 --quiet
+%pip install langchain-openai==0.1.7 --quiet
+%pip install langchain-experimental==0.0.65 --quiet
+%pip install langchain-community==0.2.16 --quiet
+%pip install faiss-cpu --quiet
+
+# Upgrading langchain and related libraries
+%pip install --upgrade langchain==0.2.16 langchain-community==0.2.16 langchain-openai==0.1.7 --quiet
+
+# Installing additional tools
+%pip install langgraph --quiet
+
+# Installing lolviz
+%pip install lolviz --quiet
