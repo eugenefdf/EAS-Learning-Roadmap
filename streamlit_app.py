@@ -54,7 +54,6 @@ else:
 
     # Filter and structure the Behavioural Indicators DataFrame
     filtered_bi_df = bi_df[bi_columns]
-    # Adjust the columns to have a multi-index header for the specified roles
     filtered_bi_df.columns = ['Sector', 'Dimension/ Learning Area'] + list(bi_multi_columns[:len(selected_columns)])
 
     # Display the filtered Behavioural Indicators DataFrame
@@ -87,7 +86,6 @@ else:
 
     # Filter and structure the Programmes DataFrame
     filtered_programmes_df = programmes_df[programmes_columns]
-    # Adjust the columns to have a multi-index header for the specified roles
     filtered_programmes_df.columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + list(programmes_multi_columns[:len(selected_columns)]) + [
         'Application Basis (Sign up/ Nomination)',
         'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
