@@ -25,7 +25,7 @@ role_columns = [
 ]
 
 # Set the title of the app
-st.title("SAT Learning Roadmap")
+st.title("EAS Learning Roadmap")
 
 # Create filters for Sector and Dimension/Learning Area below the title
 # Get unique sectors from the DataFrame
@@ -51,16 +51,15 @@ else:
     bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
     filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector) & (bi_df['Dimension/ Learning Area'] == selected_dimension)][bi_columns]
 
-    # Display the filtered Behavioural Indicators in a text area
+    # Display the filtered Behavioural Indicators in a scrollable format
     if not filtered_bi_df.empty:
-        # Assuming the first selected column is the Behavioural Indicator
-        bi_texts = []
+        # Create a container for the Behavioural Indicators
+        st.write("### Behavioural Indicators")
         for col in selected_columns:
             bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
-            bi_texts.append(f"**{col}:**\n{bi_column_text}\n")
-
-        # Use a text area for the Behavioural Indicators text area
-        st.text_area("Behavioural Indicators", value="\n".join(bi_texts), height=300, key="bi_text_area")  # Default height for scrolling
+            st.write(f"**{col}:**")
+            st.write(bi_column_text)
+            st.write("")  # Add an empty line for spacing
     else:
         st.warning("No Behavioural Indicators found for the selected filters.")
 
