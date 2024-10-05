@@ -25,7 +25,7 @@ role_columns = [
 ]
 
 # Set the title of the app
-st.title("EAS Learning Roadmap")
+st.title("SAT Learning Roadmap")
 
 # Create filters for Sector and Dimension/Learning Area below the title
 # Get unique sectors from the DataFrame
@@ -59,9 +59,8 @@ else:
             bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
             bi_texts.append(f"**{col}:**\n{bi_column_text}\n")
 
-        # Use an expander for the Behavioural Indicators text area
-        with st.expander("View Behavioural Indicators", expanded=True):
-            st.text_area("Behavioural Indicators", value="\n".join(bi_texts), height=500)  # Adjust height as needed
+        # Use a text area for the Behavioural Indicators text area
+        st.text_area("Behavioural Indicators", value="\n".join(bi_texts), height=300, key="bi_text_area")  # Default height for scrolling
     else:
         st.warning("No Behavioural Indicators found for the selected filters.")
 
