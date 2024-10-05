@@ -37,7 +37,10 @@ if not selected_columns:
 else:
     # Create multi-level columns for the filtered Behavioural Indicators DataFrame
     bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-    bi_multi_columns = pd.MultiIndex.from_tuples([('Behavioural Indicator', col) for col in bi_columns])
+    bi_multi_columns = pd.MultiIndex.from_tuples([
+        ('', 'Sector'),
+        ('', 'Dimension/ Learning Area')] + [('Behavioural Indicator', col) for col in selected_columns]
+    )
 
     # Filter and structure the Behavioural Indicators DataFrame
     filtered_bi_df = bi_df[bi_columns]
@@ -55,7 +58,18 @@ else:
         'Estimated Month of Programme',
         'Remarks'
     ]
-    programmes_multi_columns = pd.MultiIndex.from_tuples([('Type of Courses', col) if col not in ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] else ('', col) for col in programmes_columns])
+    programmes_multi_columns = pd.MultiIndex.from_tuples([
+        ('', 'Programme'),
+        ('', 'Entry Type (New/ Recurring)'),
+        ('', 'Sector'),
+        ('', 'Dimension'),
+        ('', 'Learning Area')] + [('Type of Courses', col) for col in selected_columns] + [
+        ('', 'Application Basis (Sign up/ Nomination)'),
+        ('', 'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)'),
+        ('', 'E-learning link'),
+        ('', 'Estimated Month of Programme'),
+        ('', 'Remarks')
+    ])
 
     # Filter and structure the Programmes DataFrame
     filtered_programmes_df = programmes_df[programmes_columns]
