@@ -104,9 +104,15 @@ else:
     # Add a text input for filtering the Programmes DataFrame
     filter_query = st.text_input("Filter Programmes Data by any keyword", "")
 
-    # Add a slider for filtering by month
+    # Add a slider for filtering by month with custom labels
     month_options = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    selected_months = st.slider("Select Estimated Month of Programme", min_value=0, max_value=11, value=(0, 11), format="%.0f", step=1)
+    month_labels = {index: month for index, month in enumerate(month_options)}
+    selected_months = st.slider("Select Estimated Month of Programme", 
+                                  min_value=0, 
+                                  max_value=len(month_options) - 1, 
+                                  value=(0, len(month_options) - 1), 
+                                  format="%.0f", 
+                                  step=1)
 
     # Create a list of months based on the slider range
     filtered_months = month_options[selected_months[0]:selected_months[1]+1]
