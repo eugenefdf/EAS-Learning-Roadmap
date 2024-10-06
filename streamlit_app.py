@@ -101,10 +101,11 @@ else:
     # Add a text input for filtering the Programmes DataFrame
     filter_query = st.text_input("Filter Programmes Data by any keyword", "")
     
-    # Add a month filter (scrollable)
-    month_list = ['January', 'February', 'March', 'April', 'May', 'June', 
-                  'July', 'August', 'September', 'October', 'November', 'December']
-    selected_months = st.multiselect("Select Months", options=month_list)
+    # Add a month filter (slider widget)
+    month_list = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    month_range = st.slider("Select Month Range", min_value=0, max_value=11, value=(0, 11), format="Month: %s", step=1)
+    selected_months = month_list[month_range[0]:month_range[1]+1]  # Get selected months based on the slider
 
     # Apply the filter function to the Programmes DataFrame if there is a query
     if filter_query:
