@@ -134,9 +134,10 @@ else:
 
     st.write(f"Selected month range: {min_month_abbr} to {max_month_abbr}")
 
+    #The following function below assumes that the estimated months column follows the following data structure ("All year round" / ["Month 1, Month 2"...])
     # Function to check if any month in the list falls within the selected range
     def is_month_in_range(months, min_index, max_index, month_map):
-        if "All year round" in months:
+        if "All year round" in months:      
             return True
         month_indices = [month_map[month.strip()] for month in months if month.strip() in month_map]
         return any(min_index <= index <= max_index for index in month_indices)
