@@ -27,8 +27,8 @@ bi_df = clean_dataframe(bi_df)
 # Function to clean up CSV text values
 def clean_text(text):
     text = text.encode('latin1', 'replace').decode('utf-8', 'ignore')
-    text = text.replace('�', '')  
-    text = text.replace('?', '')   
+    text = text.replace('�', '')
+    text = text.replace('?', '')
     return text.strip()
 
 # Set the title of the app
@@ -45,12 +45,12 @@ st.markdown(
 
 # Create filters for Sector and Dimension/Learning Area below the title
 unique_sectors = bi_df['Sector'].unique()
-unique_sectors = ['Select All Sectors'] + unique_sectors.tolist()  
+unique_sectors = ['Select All Sectors'] + unique_sectors.tolist()
 selected_sector = st.selectbox("Select Sector", options=unique_sectors)
 
 # Filter Dimension/Learning Area based on the selected Sector
 filtered_dimension = bi_df[bi_df['Sector'] == selected_sector.replace("Select All Sectors", "")]['Dimension/ Learning Area'].unique()
-filtered_dimension = ['Select All Dimension/Learning Areas'] + filtered_dimension.tolist()  
+filtered_dimension = ['Select All Dimension/Learning Areas'] + filtered_dimension.tolist()
 selected_dimension = st.selectbox("Select Dimension/Learning Area", options=filtered_dimension)
 
 # Sidebar for role selection
@@ -95,15 +95,17 @@ else:
         with st.expander("Click to display Behavioural Indicators"):
             st.write("### Behavioural Indicators")
             for col in selected_columns:
-                bi_column_text = filtered_bi_df[col].dropna().apply(clean_text).tolist()  
-                bi_column_text = "\n\n".join(bi_column_text)  
+                # Extract and clean the text for the current role column
+                bi_column_text = filtered_bi_df[col].dropna().apply(clean_text).tolist()  # Convert to a list
+                bi_column_text = "\n\n".join(bi_column_text)  # Join the cleaned text
 
-                if not bi_column_text.strip():  
+                if not bi_column_text.strip():  # Check if the text is empty
                     bi_column_text = "No data available for this role."
 
+                # Format the text with additional breaks between different roles
                 role_header = f"**{col}:**"
-                st.markdown(role_header)  
-                st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div><br>", unsafe_allow_html=True)  
+                st.markdown(role_header)  # Display the role header
+                st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div><br>", unsafe_allow_html=True)  # Add an extra break after each role
     else:
         st.warning("Select a sector and dimension/learning area to display the Behavioural Indicator.")
 
@@ -129,37 +131,37 @@ else:
         format="%d"
     )
 
-    min_month_abbr = month_abbreviations[min_month_index - 1]  
-    max_month_abbr = month_abbreviations[max_month_index - 1]  
+    # Convert the indices to month abbreviations for display
+    min_month_abbr = month_abbreviations[min_month_index - 1]  # Adjust index for 0-based list
+    max_month_abbr = month_abbreviations[max_month_index - 1]  # Adjust index for 0-based list
 
+    # Display the selected month range as abbreviations
     st.write(f"Selected month range: {min_month_abbr} to {max_month_abbr}")
 
-    #The following function below assumes that the estimated months column follows the following data structure ("All year round" / ["Month 1, Month 2"...])
-    # Function to check if any month in the list falls within the selected range
-    def is_month_in_range(months, min_index, max_index, month_map):
-        if "All year round" in months:      
-            return True
-        month_indices = [month_map[month.strip()] for month in months if month.strip() in month_map]
-        return any(min_index <= index <= max_index for index in month_indices)
+    # Convert text months to numeric values in the Programmes DataFrame for filtering
+    filtered_programmes_df['Month_Number'] = filtered_programmes_df['Estimated Month of Programme'].map(month_map)
 
     # Filter based on the selected month range
     filtered_programmes_df = filtered_programmes_df[
-        filtered_programmes_df['Estimated Month of Programme'].apply(lambda x: is_month_in_range(x.split(','), min_month_index, max_month_index, month_map))
+        (filtered_programmes_df['Month_Number'] >= min_month_index) & 
+        (filtered_programmes_df['Month_Number'] <= max_month_index)
     ]
 
-# Filter based on the selected course type
-if selected_course_type != "Select All Courses":
-    course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
-    filtered_programmes_df = filtered_programmes_df[course_mask]
+    # Filter based on the selected course type
+    if selected_course_type != "Select All Courses":
+        # Create a mask for course type filtering
+        course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
+        filtered_programmes_df = filtered_programmes_df[course_mask]
 
-# Check if the selected columns are empty
-if selected_columns:
-    role_mask = filtered_programmes_df[selected_columns].notna().any(axis=1)
-    filtered_programmes_df = filtered_programmes_df[role_mask]
+    # Check if the selected columns are empty
+    if selected_columns:
+        # Create a mask to keep rows with at least one non-empty value in the selected role columns
+        role_mask = filtered_programmes_df[selected_columns].notna().any(axis=1)
+        filtered_programmes_df = filtered_programmes_df[role_mask]
 
-# Display the filtered Programmes DataFrame
-if not filtered_programmes_df.empty:
-    st.write("### Available Programmes")
-    st.dataframe(filtered_programmes_df[programmes_columns])
-else:
-    st.warning("No Programmes found matching the filter query.")
+    # Display the filtered Programmes DataFrame
+    if not filtered_programmes_df.empty:
+        st.write("### Available Programmes")
+        st.dataframe(filtered_programmes_df[programmes_columns])
+    else:
+        st.warning("No Programmes found matching the filter query.")
