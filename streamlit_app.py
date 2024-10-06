@@ -98,25 +98,25 @@ else:
 
     # Month mapping
     month_map = {
-        'January': 1,
-        'February': 2,
-        'March': 3,
-        'April': 4,
-        'May': 5,
-        'June': 6,
-        'July': 7,
-        'August': 8,
-        'September': 9,
-        'October': 10,
-        'November': 11,
-        'December': 12
+        'January': JAN,
+        'February': FEB,
+        'March': MAR,
+        'April': APR,
+        'May': MAY,
+        'June': JUN,
+        'July': JUL,
+        'August': AUG,
+        'September': SEP,
+        'October': OCT,
+        'November': NOV,
+        'December': DEC
     }
 
     # Add a text input for filtering the Programmes DataFrame
-    filter_query = st.text_input("Filter Programmes Data by any keyword", "")
+    filter_query = st.text_input("Filter Programmes Table by any keyword", "")
 
     # Add a slider to filter the Programmes DataFrame by a range of months
-    min_month, max_month = st.slider("Select month range", 1, 12, (1, 12), format="%d")
+    min_month, max_month = st.slider("Select month range", JAN, DEC, (JAN, DEC), format="%d")
 
     # Convert text months to numeric values in the Programmes DataFrame for filtering
     programmes_df['Month_Number'] = programmes_df['Estimated Month of Programme'].map(month_map)
@@ -132,7 +132,7 @@ else:
 
     # Display the filtered Programmes DataFrame
     if not filtered_programmes_df.empty:
-        st.write("### Filtered Programmes Data")
+        st.write("### Available Programmes")
         st.dataframe(filtered_programmes_df)
     else:
         st.warning("No Programmes found matching the filter query.")
