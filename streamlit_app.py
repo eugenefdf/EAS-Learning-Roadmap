@@ -14,6 +14,17 @@ programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
 bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 
+# Function to clean up DataFrame by stripping whitespace from all string columns
+def clean_dataframe(df):
+    # Strip whitespace from all string columns
+    for col in df.select_dtypes(include=['object']).columns:
+        df[col] = df[col].str.strip()
+    return df
+
+# Clean the DataFrames
+programmes_df = clean_dataframe(programmes_df)
+bi_df = clean_dataframe(bi_df)
+
 # Function to clean up CSV text values
 def clean_text(text):
     # Replace unwanted characters and decode if necessary
@@ -57,8 +68,7 @@ course_types = ['Select All Courses', 'Mandatory', 'Essential', 'Optional']
 selected_course_type = st.selectbox("Select Type of Courses", options=course_types)
 
 # Display explanation for course types
-st.markdown("""
-### Type of Courses
+st.markdown("""### Type of Courses
 - **Mandatory:** Programmes that officers in the job role must attend, based on broad policy or a statutory requirement.
 - **Essential:** Programmes that are key to helping officers perform their core work functions.
 - **Optional (Good to Have):** Programmes that will help officers deepen their skills and knowledge in the functional competency.
