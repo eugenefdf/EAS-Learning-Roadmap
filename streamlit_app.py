@@ -1,28 +1,17 @@
 import streamlit as st
 import pandas as pd
+import json
+
+# Load the configuration data from the JSON file
+with open('path/to/eas_learning_roadmap_config.json') as json_file:  # Adjust the path as needed
+    config = json.load(json_file)
 
 # Load the CSV files
-programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"
-programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
-
-BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
-bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
+programmes_df = pd.read_csv(config["programmes_url"], encoding='ISO-8859-1')
+bi_df = pd.read_csv(config["bi_url"], encoding='ISO-8859-1')
 
 # Define the role columns
-role_columns = [
-    'Vice Principal (Admin) [VP(A)]',
-    'Adminstrative Manager [AM]',
-    'Operation Manager [OM]',
-    'Assistant Operation Manager/SLT [Assistant OM/SLT]',
-    'ICT Manager',
-    'Cluster ICT Manager',
-    'STEM Instructor (Workshop)',
-    'STEM Instructor (Laboratory)',
-    'Corporate Support Officer [CSO]',
-    'Admin Executive [AE]',
-    'Technical Support Officer (Audio Visual) [TSO (AV)]',
-    'Operation Support Officer [OSO]'
-]
+role_columns = config["role_columns"]
 
 # Set the title of the app
 st.title("EAS Learning Roadmap")
@@ -102,23 +91,10 @@ else:
     ]
 
     # Month mapping
-    month_map = {
-        'January': 1,
-        'February': 2,
-        'March': 3,
-        'April': 4,
-        'May': 5,
-        'June': 6,
-        'July': 7,
-        'August': 8,
-        'September': 9,
-        'October': 10,
-        'November': 11,
-        'December': 12
-    }
+    month_map = config["month_map"]
 
     # Create a list of month abbreviations
-    month_abbreviations = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    month_abbreviations = config["month_abbreviations"]
 
     # Add a slider to filter the Programmes DataFrame by a range of months
     min_month_index, max_month_index = st.slider(
