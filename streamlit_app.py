@@ -37,16 +37,14 @@ st.markdown(
 )
 
 # Create filters for Sector and Dimension/Learning Area below the title
-# Get unique sectors from the DataFrame and add "Select All" option
-unique_sectors = ['Select All Sectors'] + list(bi_df['Sector'].unique())
+# Get unique sectors from the DataFrame
+unique_sectors = bi_df['Sector'].unique()
+unique_sectors = ['Select All Sectors'] + unique_sectors.tolist()  # Add "Select All" option
 selected_sector = st.selectbox("Select Sector", options=unique_sectors)
 
-# Filter Dimension/Learning Area based on the selected Sector and add "Select All" option
-if selected_sector == "Select All Sectors":
-    filtered_dimension = ['Select All Dimension/Learning Areas']  # Only show the Select All option
-else:
-    filtered_dimension = ['Select All Dimension/Learning Areas'] + list(bi_df[bi_df['Sector'] == selected_sector]['Dimension/ Learning Area'].unique())
-
+# Filter Dimension/Learning Area based on the selected Sector
+filtered_dimension = bi_df[bi_df['Sector'] == selected_sector.replace("Select All Sectors", "")]['Dimension/ Learning Area'].unique()
+filtered_dimension = ['Select All Dimension/Learning Areas'] + filtered_dimension.tolist()  # Add "Select All" option
 selected_dimension = st.selectbox("Select Dimension/Learning Area", options=filtered_dimension)
 
 # Sidebar for role selection
@@ -62,15 +60,16 @@ if not selected_columns:
 else:
     # Filter and structure the Behavioural Indicators DataFrame
     bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector) & 
-                            (bi_df['Dimension/ Learning Area'] == selected_dimension)][bi_columns]
+    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector.replace("Select All Sectors", "")) & 
+                            (bi_df['Dimension/ Learning Area'] == selected_dimension.replace("Select All Dimension/Learning Areas", ""))][bi_columns]
 
-    # Handle "Select All" options for sectors and dimensions
+    # Check if "Select All" is selected for Sector or Dimension
     if selected_sector == "Select All Sectors" or selected_dimension == "Select All Dimension/Learning Areas":
-        st.error("Please specify a sector and dimension/learning area to display Behavioural Indicators.")
+        st.warning("Please specify a Sector and Dimension/Learning Area instead.")
     else:
-        # Display the filtered Behavioural Indicators in a scrollable format using text_area
+        # Display the filtered Behavioural Indicators in a scrollable format
         if not filtered_bi_df.empty:
+            # Create an expander for the Behavioural Indicators
             with st.expander("Click to display Behavioural Indicators"):
                 st.write("### Behavioural Indicators")
                 for col in selected_columns:
@@ -79,8 +78,12 @@ else:
                     if not bi_column_text.strip():  # Check if the text is empty
                         bi_column_text = "No data available for this role."
                     
-                    # Use st.text_area for long text with scrolling
-                    st.text_area(f"**{col}:**", value=bi_column_text.replace("\n", "\n"), height=300, key=col, max_chars=None)
+                    # Replace new lines for better readability
+                    bi_column_text = bi_column_text.replace("\n", " \n")
+
+                    # Use st.markdown for long text with scrolling
+                    st.markdown(f"**{col}:**")
+                    st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div>", unsafe_allow_html=True)
         else:
             st.warning("No Behavioural Indicators found for the selected filters.")
 
@@ -100,22 +103,22 @@ else:
 
     # Add a text input for filtering the Programmes DataFrame
     filter_query = st.text_input("Filter Programmes Data by any keyword", "")
-    
-    # Add a month filter (slider widget)
-    month_list = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    month_range = st.slider("Select Month Range", min_value=0, max_value=11, value=(0, 11), format="Month: %s", step=1)
-    selected_months = month_list[month_range[0]:month_range[1]+1]  # Get selected months based on the slider
+
+    # Add a slider for filtering by month
+    month_options = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    selected_months = st.slider("Select Estimated Month of Programme", min_value=0, max_value=11, value=(0, 11), format="%.0f", step=1)
+
+    # Create a list of months based on the slider range
+    filtered_months = month_options[selected_months[0]:selected_months[1]+1]
 
     # Apply the filter function to the Programmes DataFrame if there is a query
-    if filter_query:
-        filtered_programmes_df = filter_dataframe(programmes_df[programmes_columns], filter_query)
-    else:
-        filtered_programmes_df = programmes_df[programmes_columns]
+    filtered_programmes_df = programmes_df[programmes_columns]
 
-    # Further filter by selected months
-    if selected_months:
-        filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Estimated Month of Programme'].isin(selected_months)]
+    if filter_query:
+        filtered_programmes_df = filter_dataframe(filtered_programmes_df, filter_query)
+
+    # Filter the Programmes DataFrame by the selected months
+    filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Estimated Month of Programme'].isin(filtered_months)]
 
     # Display the filtered Programmes DataFrame
     if not filtered_programmes_df.empty:
