@@ -90,7 +90,7 @@ else:
                 st.markdown(f"**{col}:**")
                 st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div>", unsafe_allow_html=True)
     else:
-        st.warning("No Behavioural Indicators found for the selected filters.")
+        st.warning("Select a sector and dimension/learning area to display the Behavioural Indicator.")
 
     # Create columns for Programmes DataFrame
     programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
@@ -131,12 +131,6 @@ else:
         (filtered_programmes_df['Month_Number'] >= min_month) & 
         (filtered_programmes_df['Month_Number'] <= max_month)
     ]
-
-    # Apply the filter function to the Programmes DataFrame if there is a query
-    if filter_query:
-        filtered_programmes_df = filtered_programmes_df[filtered_programmes_df.apply(
-            lambda row: row.astype(str).str.contains(filter_query, case=False).any(), axis=1
-        )]
 
     # Display the filtered Programmes DataFrame
     if not filtered_programmes_df.empty:
