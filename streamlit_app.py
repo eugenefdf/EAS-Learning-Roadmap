@@ -49,7 +49,14 @@ else:
 
 selected_dimension = st.selectbox("Select Dimension/Learning Area", options=filtered_dimension)
 
-# Filter the Behavioural Indicators DataFrame based on selected filters
+# Sidebar for role selection
+st.sidebar.header("Select Roles to Display")
+selected_columns = []
+for full_column in role_columns:
+    if st.sidebar.checkbox(full_column, value=False):
+        selected_columns.append(full_column)
+
+# Filter Behavioural Indicators DataFrame based on Sector and Dimension/Learning Area
 if selected_sector == "Select All Sectors":
     filtered_bi_df = bi_df.copy()  # No sector filtering
 else:
@@ -58,26 +65,17 @@ else:
 if selected_dimension != "Select All Dimension/Learning Areas":
     filtered_bi_df = filtered_bi_df[filtered_bi_df['Dimension/ Learning Area'] == selected_dimension]
 
-# Now the `filtered_bi_df` contains the filtered Behavioural Indicators based on selected options.
-# Sidebar for role selection
-st.sidebar.header("Select Roles to Display")
-selected_columns = []
-for full_column in role_columns:
-    if st.sidebar.checkbox(full_column, value=False):
-        selected_columns.append(full_column)
-
-# Check if any roles are selected
-if not selected_columns:
-    st.warning("Please select at least one role to display.")
+# Filter the Programmes DataFrame based on Sector and Dimension filters
+if selected_sector == "Select All Sectors":
+    filtered_programmes_df = programmes_df.copy()
 else:
-    # Filter and structure the Behavioural Indicators DataFrame
-    bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector) & 
-                            (bi_df['Dimension/ Learning Area'] == selected_dimension)][bi_columns]
+    filtered_programmes_df = programmes_df[programmes_df['Sector'] == selected_sector]
 
-   # Display the filtered Behavioural Indicators in a scrollable format using text_area
+if selected_dimension != "Select All Dimension/Learning Areas":
+    filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Dimension'] == selected_dimension]
+
+# Display the filtered Behavioural Indicators in a scrollable format using text_area within an expander
 if not filtered_bi_df.empty:
-    # Create an expander for the Behavioural Indicators
     with st.expander("Click to display Behavioural Indicators"):
         st.write("### Behavioural Indicators")
         for col in selected_columns:
@@ -86,28 +84,21 @@ if not filtered_bi_df.empty:
             if not bi_column_text.strip():  # Check if the text is empty
                 bi_column_text = "No data available for this role."
             
-            # Use st.text_area for long text with scrolling
-            st.text_area(f"**{col}:**", value=bi_column_text.replace("\n", " "), height=200, key=col, max_chars=None)
+            # Use st.text_area for long text with scrolling, ensuring height is set for scrolling
+            st.text_area(f"**{col}:**", value=bi_column_text.replace("\n", " "), height=300, key=col, max_chars=None)
 else:
     st.warning("No Behavioural Indicators found for the selected filters.")
 
-# Month mapping to numeric values
-month_map = {
-    "January": 1, "February": 2, "March": 3, "April": 4, 
-    "May": 5, "June": 6, "July": 7, "August": 8, 
-    "September": 9, "October": 10, "November": 11, "December": 12
-}
+# Programmes DataFrame columns for display
+programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
+    'Application Basis (Sign up/ Nomination)',
+    'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
+    'E-learning link',
+    'Estimated Month of Programme',
+    'Remarks'
+]
 
-# Add a slider to filter the Programmes DataFrame by a range of months
-min_month, max_month = st.slider("Select month range", 1, 12, (1, 12), format="%d")
-
-# Convert text months to numeric values in the Programmes DataFrame for filtering
-programmes_df['Month_Number'] = programmes_df['Estimated Month of Programme'].map(month_map)
-
-# Filter based on the selected month range
-filtered_programmes_df = programmes_df[(programmes_df['Month_Number'] >= min_month) & (programmes_df['Month_Number'] <= max_month)]
-
-# Function to filter DataFrame based on a query
+# Function to filter Programmes DataFrame based on a query
 def filter_dataframe(df, query):
     query = query.lower()
     return df[df.apply(lambda row: row.astype(str).str.lower().str.contains(query).any(), axis=1)]
@@ -117,20 +108,13 @@ filter_query = st.text_input("Filter Programmes Data by any keyword", "")
 
 # Apply the filter function to the Programmes DataFrame if there is a query
 if filter_query:
-    filtered_programmes_df = filter_dataframe(filtered_programmes_df, filter_query)
-
-# Create columns for Programmes DataFrame
-programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
-    'Application Basis (Sign up/ Nomination)',
-    'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
-    'E-learning link',
-    'Estimated Month of Programme',
-    'Remarks'
-]
+    filtered_programmes_df = filter_dataframe(filtered_programmes_df[programmes_columns], filter_query)
+else:
+    filtered_programmes_df = filtered_programmes_df[programmes_columns]
 
 # Display the filtered Programmes DataFrame
-if not filtered_programmes_df[programmes_columns].empty:
+if not filtered_programmes_df.empty:
     st.write("### Filtered Programmes Data")
-    st.dataframe(filtered_programmes_df[programmes_columns])
+    st.dataframe(filtered_programmes_df)
 else:
-    st.warning("No Programmes found matching the filter query or selected month range.")
+    st.warning("No Programmes found matching the filter query.")
