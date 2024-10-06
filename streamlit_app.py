@@ -96,10 +96,21 @@ else:
         'Remarks'
     ]
 
-    # Function to filter DataFrame based on a query
-    def filter_dataframe(df, query):
-        query = query.lower()
-        return df[df.apply(lambda row: row.astype(str).str.lower().str.contains(query).any(), axis=1)]
+    # Month mapping
+    month_map = {
+        'January': 1,
+        'February': 2,
+        'March': 3,
+        'April': 4,
+        'May': 5,
+        'June': 6,
+        'July': 7,
+        'August': 8,
+        'September': 9,
+        'October': 10,
+        'November': 11,
+        'December': 12
+    }
 
     # Add a text input for filtering the Programmes DataFrame
     filter_query = st.text_input("Filter Programmes Data by any keyword", "")
@@ -114,13 +125,10 @@ else:
     filtered_programmes_df = programmes_df[(programmes_df['Month_Number'] >= min_month) & (programmes_df['Month_Number'] <= max_month)]
 
     # Apply the filter function to the Programmes DataFrame if there is a query
-    filtered_programmes_df = programmes_df[programmes_columns]
+    filtered_programmes_df = filtered_programmes_df[programmes_columns]
 
     if filter_query:
         filtered_programmes_df = filter_dataframe(filtered_programmes_df, filter_query)
-
-    # Filter the Programmes DataFrame by the selected months
-    filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Estimated Month of Programme'].isin(filtered_months)]
 
     # Display the filtered Programmes DataFrame
     if not filtered_programmes_df.empty:
