@@ -98,25 +98,25 @@ else:
 
     # Month mapping
     month_map = {
-        'January': JAN,
-        'February': FEB,
-        'March': MAR,
-        'April': APR,
-        'May': MAY,
-        'June': JUN,
-        'July': JUL,
-        'August': AUG,
-        'September': SEP,
-        'October': OCT,
-        'November': NOV,
-        'December': DEC
+        'January': 1,
+        'February': 2,
+        'March': 3,
+        'April': 4,
+        'May': 5,
+        'June': 6,
+        'July': 7,
+        'August': 8,
+        'September': 9,
+        'October': 10,
+        'November': 11,
+        'December': 12
     }
 
     # Add a text input for filtering the Programmes DataFrame
     filter_query = st.text_input("Filter Programmes Table by any keyword", "")
 
     # Add a slider to filter the Programmes DataFrame by a range of months
-    min_month, max_month = st.slider("Select month range", JAN, DEC, (JAN, DEC), format="%d")
+    min_month, max_month = st.slider("Select month range", 1, 12, (1, 12), format="%d")
 
     # Convert text months to numeric values in the Programmes DataFrame for filtering
     programmes_df['Month_Number'] = programmes_df['Estimated Month of Programme'].map(month_map)
