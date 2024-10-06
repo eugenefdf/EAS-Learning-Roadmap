@@ -150,15 +150,21 @@ else:
         (filtered_programmes_df['Month_Number'] <= max_month_index)
     ]
 
-    # Filter based on the selected course type
-    if selected_course_type != "Select All Courses":
-        # Create a mask for course type filtering
-        course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
-        filtered_programmes_df = filtered_programmes_df[course_mask]
+# Filter based on the selected course type
+if selected_course_type != "Select All Courses":
+    # Create a mask for course type filtering
+    course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
+    filtered_programmes_df = filtered_programmes_df[course_mask]
 
-    # Display the filtered Programmes DataFrame
-    if not filtered_programmes_df.empty:
-        st.write("### Available Programmes")
-        st.dataframe(filtered_programmes_df[programmes_columns])
-    else:
-        st.warning("No Programmes found matching the filter query.")
+# Check if the selected columns are empty
+if selected_columns:
+    # Create a mask to keep rows with at least one non-empty value in the selected role columns
+    role_mask = filtered_programmes_df[selected_columns].notna().any(axis=1)
+    filtered_programmes_df = filtered_programmes_df[role_mask]
+
+# Display the filtered Programmes DataFrame
+if not filtered_programmes_df.empty:
+    st.write("### Available Programmes")
+    st.dataframe(filtered_programmes_df[programmes_columns])
+else:
+    st.warning("No Programmes found matching the filter query.")
