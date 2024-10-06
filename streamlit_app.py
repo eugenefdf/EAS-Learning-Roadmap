@@ -19,6 +19,7 @@ def clean_text(text):
     # Replace unwanted characters and decode if necessary
     text = text.encode('latin1', 'replace').decode('utf-8', 'ignore')
     text = text.replace('�', '')  # Remove replacement character if present
+    text = text.replace('?', '')   # Remove question marks
     return text.strip()
 
 # Set the title of the app
@@ -81,10 +82,11 @@ else:
 
                 if not bi_column_text.strip():  # Check if the text is empty
                     bi_column_text = "No data available for this role."
-                    
-                # Use st.markdown for long text with scrolling
-                st.markdown(f"**{col}:**")
-                st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div>", unsafe_allow_html=True)
+
+                # Format the text with additional breaks between different roles
+                role_header = f"**{col}:**"
+                st.markdown(role_header)  # Display the role header
+                st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div><br>", unsafe_allow_html=True)  # Add an extra break after each role
     else:
         st.warning("Select a sector and dimension/learning area to display the Behavioural Indicator.")
 
