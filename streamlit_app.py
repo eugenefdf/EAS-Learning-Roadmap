@@ -117,9 +117,6 @@ else:
         'December': 12
     }
 
-    # Add a text input for filtering the Programmes DataFrame
-    filter_query = st.text_input("Filter Programmes Table by any keyword", "")
-
     # Add a slider to filter the Programmes DataFrame by a range of months
     min_month, max_month = st.slider("Select month range", 1, 12, (1, 12), format="%d")
 
