@@ -117,16 +117,32 @@ else:
         'December': 12
     }
 
+    # Create a list of month abbreviations
+    month_abbreviations = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
     # Add a slider to filter the Programmes DataFrame by a range of months
-    min_month, max_month = st.slider("Select month range", 1, 12, (1, 12), format="%d")
+    min_month_index, max_month_index = st.slider(
+        "Select month range",
+        1,
+        12,
+        (1, 12),
+        format="%d"
+    )
+
+    # Convert the indices to month abbreviations for display
+    min_month_abbr = month_abbreviations[min_month_index - 1]  # Adjust index for 0-based list
+    max_month_abbr = month_abbreviations[max_month_index - 1]  # Adjust index for 0-based list
+
+    # Display the selected month range as abbreviations
+    st.write(f"Selected month range: {min_month_abbr} to {max_month_abbr}")
 
     # Convert text months to numeric values in the Programmes DataFrame for filtering
     filtered_programmes_df['Month_Number'] = filtered_programmes_df['Estimated Month of Programme'].map(month_map)
 
     # Filter based on the selected month range
     filtered_programmes_df = filtered_programmes_df[
-        (filtered_programmes_df['Month_Number'] >= min_month) & 
-        (filtered_programmes_df['Month_Number'] <= max_month)
+        (filtered_programmes_df['Month_Number'] >= min_month_index) & 
+        (filtered_programmes_df['Month_Number'] <= max_month_index)
     ]
 
     # Display the filtered Programmes DataFrame
