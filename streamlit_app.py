@@ -1,21 +1,18 @@
 import streamlit as st
 import pandas as pd
 import json
+import requests
 
-# Load the configuration data from the JSON file
-with open('path/to/eas_learning_roadmap_config.json') as json_file:  # Adjust the path as needed
-    config = json.load(json_file)
+# Load the configuration JSON file from GitHub
+config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
+config_data = requests.get(config_url).json()
 
 # Load the CSV files
-programmes_df = pd.read_csv(config["programmes_url"], encoding='ISO-8859-1')
-bi_df = pd.read_csv(config["bi_url"], encoding='ISO-8859-1')
+programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"
+programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 
-# Load the configuration data from the JSON file
-with open('eas_learning_roadmap_config.json') as json_file:  # Make sure the path is correct
-    config = json.load(json_file)
-
-# Define the role columns
-role_columns = config["role_columns"]
+BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
+bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 
 # Set the title of the app
 st.title("EAS Learning Roadmap")
@@ -43,7 +40,7 @@ selected_dimension = st.selectbox("Select Dimension/Learning Area", options=filt
 # Sidebar for role selection
 st.sidebar.header("Select Roles to Display")
 selected_columns = []
-for full_column in role_columns:
+for full_column in config_data['roles']:
     if st.sidebar.checkbox(full_column, value=False):
         selected_columns.append(full_column)
 
@@ -94,11 +91,9 @@ else:
         'Remarks'
     ]
 
-    # Month mapping
-    month_map = config["month_map"]
-
-    # Create a list of month abbreviations
-    month_abbreviations = config["month_abbreviations"]
+    # Month mapping and abbreviations
+    month_map = config_data['months']
+    month_abbreviations = config_data['month_abbreviations']
 
     # Add a slider to filter the Programmes DataFrame by a range of months
     min_month_index, max_month_index = st.slider(
