@@ -58,117 +58,89 @@ for full_column in role_columns:
 if not selected_columns:
     st.warning("Please select at least one role to display.")
 else:
+    # Create a copy of the original programmes_df for filtering
+    filtered_programmes_df = programmes_df.copy()
+
     # Check if "Select All" is selected for Sector or Dimension
-    if selected_sector == "Select All Sectors" or selected_dimension == "Select All Dimension/Learning Areas":
-        # Show all Behavioural Indicators without filtering
-        bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-        filtered_bi_df = bi_df[bi_columns]
+    if selected_sector != "Select All Sectors":
+        filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Sector'] == selected_sector.replace("Select All Sectors", "")]
+    
+    if selected_dimension != "Select All Dimension/Learning Areas":
+        filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Dimension'] == selected_dimension.replace("Select All Dimension/Learning Areas", "")]
 
-        # Display the Behavioural Indicators in a scrollable format
-        if not filtered_bi_df.empty:
-            with st.expander("Click to display Behavioural Indicators"):
-                st.write("### Behavioural Indicators")
-                for col in selected_columns:
-                    # Extract the text for the current role column
-                    bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
-                    if not bi_column_text.strip():  # Check if the text is empty
-                        bi_column_text = "No data available for this role."
-                        
-                    # Replace new lines for better readability
-                    bi_column_text = bi_column_text.replace("\n", " \n")
+    # Filter and structure the Behavioural Indicators DataFrame
+    bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
+    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector.replace("Select All Sectors", "")) & 
+                            (bi_df['Dimension/ Learning Area'] == selected_dimension.replace("Select All Dimension/Learning Areas", ""))][bi_columns]
 
-                    # Use st.markdown for long text with scrolling
-                    st.markdown(f"**{col}:**")
-                    st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div>", unsafe_allow_html=True)
-        else:
-            st.warning("No Behavioural Indicators found for the selected filters.")
-        
-        # Display the Programmes DataFrame without filtering
-        st.write("### Available Programmes")
-        st.dataframe(programmes_df[programmes_columns])
+    # Display the filtered Behavioural Indicators in a scrollable format
+    if not filtered_bi_df.empty:
+        with st.expander("Click to display Behavioural Indicators"):
+            st.write("### Behavioural Indicators")
+            for col in selected_columns:
+                # Extract the text for the current role column
+                bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
+                if not bi_column_text.strip():  # Check if the text is empty
+                    bi_column_text = "No data available for this role."
+                    
+                # Replace new lines for better readability
+                bi_column_text = bi_column_text.replace("\n", " \n")
 
+                # Use st.markdown for long text with scrolling
+                st.markdown(f"**{col}:**")
+                st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div>", unsafe_allow_html=True)
     else:
-        # Filter and structure the Behavioural Indicators DataFrame
-        bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-        filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector.replace("Select All Sectors", "")) & 
-                                (bi_df['Dimension/ Learning Area'] == selected_dimension.replace("Select All Dimension/Learning Areas", ""))][bi_columns]
+        st.warning("No Behavioural Indicators found for the selected filters.")
 
-        # Display the filtered Behavioural Indicators in a scrollable format
-        if not filtered_bi_df.empty:
-            with st.expander("Click to display Behavioural Indicators"):
-                st.write("### Behavioural Indicators")
-                for col in selected_columns:
-                    # Extract the text for the current role column
-                    bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
-                    if not bi_column_text.strip():  # Check if the text is empty
-                        bi_column_text = "No data available for this role."
-                        
-                    # Replace new lines for better readability
-                    bi_column_text = bi_column_text.replace("\n", " \n")
+    # Create columns for Programmes DataFrame
+    programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
+        'Application Basis (Sign up/ Nomination)',
+        'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
+        'E-learning link',
+        'Estimated Month of Programme',
+        'Remarks'
+    ]
 
-                    # Use st.markdown for long text with scrolling
-                    st.markdown(f"**{col}:**")
-                    st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div>", unsafe_allow_html=True)
-        else:
-            st.warning("No Behavioural Indicators found for the selected filters.")
+    # Month mapping
+    month_map = {
+        'January': 1,
+        'February': 2,
+        'March': 3,
+        'April': 4,
+        'May': 5,
+        'June': 6,
+        'July': 7,
+        'August': 8,
+        'September': 9,
+        'October': 10,
+        'November': 11,
+        'December': 12
+    }
 
-        # Create columns for Programmes DataFrame
-        programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
-            'Application Basis (Sign up/ Nomination)',
-            'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
-            'E-learning link',
-            'Estimated Month of Programme',
-            'Remarks'
-        ]
+    # Add a text input for filtering the Programmes DataFrame
+    filter_query = st.text_input("Filter Programmes Table by any keyword", "")
 
-        # Month mapping
-        month_map = {
-            'January': 1,
-            'February': 2,
-            'March': 3,
-            'April': 4,
-            'May': 5,
-            'June': 6,
-            'July': 7,
-            'August': 8,
-            'September': 9,
-            'October': 10,
-            'November': 11,
-            'December': 12
-        }
+    # Add a slider to filter the Programmes DataFrame by a range of months
+    min_month, max_month = st.slider("Select month range", 1, 12, (1, 12), format="%d")
 
-        # Add a text input for filtering the Programmes DataFrame
-        filter_query = st.text_input("Filter Programmes Table by any keyword", "")
+    # Convert text months to numeric values in the Programmes DataFrame for filtering
+    filtered_programmes_df['Month_Number'] = filtered_programmes_df['Estimated Month of Programme'].map(month_map)
 
-        # Add a slider to filter the Programmes DataFrame by a range of months
-        min_month, max_month = st.slider("Select month range", 1, 12, (1, 12), format="%d")
+    # Filter based on the selected month range
+    filtered_programmes_df = filtered_programmes_df[
+        (filtered_programmes_df['Month_Number'] >= min_month) & 
+        (filtered_programmes_df['Month_Number'] <= max_month)
+    ]
 
-        # Filter the Programmes DataFrame based on the selected Sector and Dimension/Learning Area
-        filtered_programmes_df = programmes_df[
-            (programmes_df['Sector'] == selected_sector.replace("Select All Sectors", "")) &
-            (programmes_df['Dimension'] == selected_dimension.replace("Select All Dimension/Learning Areas", ""))
-        ]
+    # Apply the filter function to the Programmes DataFrame if there is a query
+    if filter_query:
+        filtered_programmes_df = filtered_programmes_df[filtered_programmes_df.apply(
+            lambda row: row.astype(str).str.contains(filter_query, case=False).any(), axis=1
+        )]
 
-        # Convert text months to numeric values in the Programmes DataFrame for filtering
-        filtered_programmes_df['Month_Number'] = filtered_programmes_df['Estimated Month of Programme'].map(month_map)
-
-        # Filter based on the selected month range
-        filtered_programmes_df = filtered_programmes_df[
-            (filtered_programmes_df['Month_Number'] >= min_month) & 
-            (filtered_programmes_df['Month_Number'] <= max_month)
-        ]
-
-        # Apply the filter function to the Programmes DataFrame if there is a query
-        filtered_programmes_df = filtered_programmes_df[programmes_columns]
-
-        if filter_query:
-            filtered_programmes_df = filtered_programmes_df[
-                filtered_programmes_df.apply(lambda row: row.astype(str).str.contains(filter_query, case=False).any(), axis=1)
-            ]
-
-        # Display the filtered Programmes DataFrame
-        if not filtered_programmes_df.empty:
-            st.write("### Available Programmes")
-            st.dataframe(filtered_programmes_df)
-        else:
-            st.warning("No Programmes found matching the filter query.")
+    # Display the filtered Programmes DataFrame
+    if not filtered_programmes_df.empty:
+        st.write("### Available Programmes")
+        st.dataframe(filtered_programmes_df[programmes_columns])
+    else:
+        st.warning("No Programmes found matching the filter query.")
