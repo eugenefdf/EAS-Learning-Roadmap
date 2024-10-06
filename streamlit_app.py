@@ -14,7 +14,7 @@ programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
 bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 
-# Function to clean up text
+# Function to clean up CSV text values
 def clean_text(text):
     # Replace unwanted characters and decode if necessary
     text = text.encode('latin1', 'replace').decode('utf-8', 'ignore')
