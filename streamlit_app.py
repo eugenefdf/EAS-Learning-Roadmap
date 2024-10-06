@@ -52,6 +52,18 @@ for full_column in config_data['roles']:
     if st.sidebar.checkbox(full_column, value=False):
         selected_columns.append(full_column)
 
+# Filter for Course Types
+course_types = ['Select All Courses', 'Mandatory', 'Essential', 'Optional']
+selected_course_type = st.selectbox("Select Type of Courses", options=course_types)
+
+# Display explanation for course types
+st.markdown("""
+### Type of Courses
+- **Mandatory:** Programmes that officers in the job role must attend, based on broad policy or a statutory requirement.
+- **Essential:** Programmes that are key to helping officers perform their core work functions.
+- **Optional (Good to Have):** Programmes that will help officers deepen their skills and knowledge in the functional competency.
+""")
+
 # Check if any roles are selected
 if not selected_columns:
     st.warning("Please select at least one role to display.")
@@ -90,26 +102,6 @@ else:
     else:
         st.warning("Select a sector and dimension/learning area to display the Behavioural Indicator.")
 
-    # Explanation for course types
-    st.markdown("""
-    ### Course Types
-    - **Mandatory**: Programmes that officers in the job role must attend, based on broad policy or a statutory requirement.
-    - **Essential**: Programmes that are key to helping officers perform their core work functions.
-    - **Optional (Good to Have)**: Programmes that will help officers deepen their skills and knowledge in the functional competency.
-    """)
-
-    # Filter for Programme roles
-    st.sidebar.header("Filter Programmes by Roles")
-    role_filter = st.sidebar.multiselect("Select Roles", options=['Select All'] + config_data['roles'], default=['Select All'])
-    
-    # Check if "Select All" is selected
-    if 'Select All' in role_filter:
-        role_filter = config_data['roles']  # If "Select All" is selected, include all roles
-
-    # Filter based on selected roles
-    filtered_programmes_df = filtered_programmes_df[filtered_programmes_df[selected_columns].notnull().any(axis=1)]
-    filtered_programmes_df = filtered_programmes_df[filtered_programmes_df[selected_columns].isin(role_filter).any(axis=1)]
-
     # Create columns for Programmes DataFrame
     programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
         'Application Basis (Sign up/ Nomination)',
@@ -147,6 +139,10 @@ else:
         (filtered_programmes_df['Month_Number'] >= min_month_index) & 
         (filtered_programmes_df['Month_Number'] <= max_month_index)
     ]
+
+    # Filter based on the selected course type
+    if selected_course_type != "Select All Courses":
+        filtered_programmes_df = filtered_programmes_df[filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)]
 
     # Display the filtered Programmes DataFrame
     if not filtered_programmes_df.empty:
