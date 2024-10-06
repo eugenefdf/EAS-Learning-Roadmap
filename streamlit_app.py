@@ -90,7 +90,7 @@ else:
                 st.markdown(f"**{col}:**")
                 st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div>", unsafe_allow_html=True)
     else:
-        st.warning("No Behavioural Indicators found for the selected filters.")
+        st.warning("Please select at least one sector and dimension/learning area to display the Behavioural Indicator.")
 
     # Create columns for Programmes DataFrame
     programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
