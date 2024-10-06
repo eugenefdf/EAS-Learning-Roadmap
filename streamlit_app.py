@@ -60,7 +60,33 @@ if not selected_columns:
 else:
     # Check if "Select All" is selected for Sector or Dimension
     if selected_sector == "Select All Sectors" or selected_dimension == "Select All Dimension/Learning Areas":
-        st.warning("Please specify a Sector and Dimension/Learning Area instead.")
+        # Show all Behavioural Indicators without filtering
+        bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
+        filtered_bi_df = bi_df[bi_columns]
+
+        # Display the Behavioural Indicators in a scrollable format
+        if not filtered_bi_df.empty:
+            with st.expander("Click to display Behavioural Indicators"):
+                st.write("### Behavioural Indicators")
+                for col in selected_columns:
+                    # Extract the text for the current role column
+                    bi_column_text = filtered_bi_df[col].dropna().to_string(index=False)
+                    if not bi_column_text.strip():  # Check if the text is empty
+                        bi_column_text = "No data available for this role."
+                        
+                    # Replace new lines for better readability
+                    bi_column_text = bi_column_text.replace("\n", " \n")
+
+                    # Use st.markdown for long text with scrolling
+                    st.markdown(f"**{col}:**")
+                    st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div>", unsafe_allow_html=True)
+        else:
+            st.warning("No Behavioural Indicators found for the selected filters.")
+        
+        # Display the Programmes DataFrame without filtering
+        st.write("### Available Programmes")
+        st.dataframe(programmes_df[programmes_columns])
+
     else:
         # Filter and structure the Behavioural Indicators DataFrame
         bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
