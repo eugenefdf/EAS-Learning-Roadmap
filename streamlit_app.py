@@ -10,6 +10,10 @@ with open('path/to/eas_learning_roadmap_config.json') as json_file:  # Adjust th
 programmes_df = pd.read_csv(config["programmes_url"], encoding='ISO-8859-1')
 bi_df = pd.read_csv(config["bi_url"], encoding='ISO-8859-1')
 
+# Load the configuration data from the JSON file
+with open('eas_learning_roadmap_config.json') as json_file:  # Make sure the path is correct
+    config = json.load(json_file)
+
 # Define the role columns
 role_columns = config["role_columns"]
 
