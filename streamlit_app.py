@@ -88,38 +88,32 @@ else:
     if selected_dimension != "Select All Dimension/Learning Areas":
         filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Dimension'] == selected_dimension.replace("Select All Dimension/Learning Areas", "")]
 
-    # Filter and structure the Behavioural Indicators DataFrame
-    bi_columns = ['Sector', 'Dimension/ Learning Area'] + selected_columns
-    filtered_bi_df = bi_df[(bi_df['Sector'] == selected_sector.replace("Select All Sectors", "")) & 
-                            (bi_df['Dimension/ Learning Area'] == selected_dimension.replace("Select All Dimension/Learning Areas", ""))][bi_columns]
-
-    # Display the filtered Behavioural Indicators in a scrollable format
-    if not filtered_bi_df.empty:
-        with st.expander("Click to display Behavioural Indicators"):
-            st.write("### Behavioural Indicators")
-            for col in selected_columns:
-                # Extract and clean the text for the current role column
-                bi_column_text = filtered_bi_df[col].dropna().apply(clean_text).tolist()  # Convert to a list
-                bi_column_text = "\n\n".join(bi_column_text)  # Join the cleaned text
-
-                if not bi_column_text.strip():  # Check if the text is empty
-                    bi_column_text = "No data available for this role."
-
-                # Format the text with additional breaks between different roles
-                role_header = f"**{col}:**"
-                st.markdown(role_header)  # Display the role header
-                st.markdown(f"<div style='max-height: 200px; overflow-y: auto; white-space: pre-wrap;'>{bi_column_text}</div><br>", unsafe_allow_html=True)  # Add an extra break after each role
-    else:
-        st.warning("Select a sector and dimension/learning area to display the Behavioural Indicator.")
-
-    # Create columns for Programmes DataFrame
-    programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
-        'Application Basis (Sign up/ Nomination)',
-        'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
-        'E-learning link',
-        'Estimated Month of Programme',
-        'Remarks'
+    # Retain all columns except for role-specific ones initially
+    role_columns = [
+        'Type of Course - Vice Principal (Admin) [VP(A)]', 
+        'Type of Course - Administrative Manager [AM]', 
+        'Type of Course - Operation Manager [OM]', 
+        'Type of Course - Assistant Operation Manager/SLT [Assistant OM/SLT]', 
+        'Type of Course - ICT Manager', 
+        'Type of Course - Cluster ICT Manager', 
+        'Type of Course - STEM Instructor (Workshop)', 
+        'Type of Course - STEM Instructor (Laboratory)', 
+        'Type of Course - Corporate Support Officer [CSO]', 
+        'Type of Course - Admin Executive [AE]', 
+        'Type of Course - Technical Support Officer (Audio Visual) [TSO (AV)]', 
+        'Type of Course - Operation Support Officer [OSO]'
     ]
+    
+    # Create a boolean mask for filtering
+    mask = pd.Series([True] * len(filtered_programmes_df))  # Start with all True
+
+    # Check each role column; if the role is selected, check for None values
+    for role in selected_columns:
+        if role in role_columns:
+            mask &= filtered_programmes_df[role].notnull()  # Keep rows where the role is not None
+
+    # Apply the mask to filter the DataFrame
+    filtered_programmes_df = filtered_programmes_df[mask]
 
     # Month mapping and abbreviations
     month_map = config_data['months']
@@ -152,11 +146,21 @@ else:
 
     # Filter based on the selected course type
     if selected_course_type != "Select All Courses":
-        filtered_programmes_df = filtered_programmes_df[filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)]
+        # Filter for all relevant columns based on selected course type
+        filtered_programmes_df = filtered_programmes_df[
+            (filtered_programmes_df[role_columns].eq(selected_course_type).any(axis=1))
+        ]
 
     # Display the filtered Programmes DataFrame
     if not filtered_programmes_df.empty:
         st.write("### Available Programmes")
-        st.dataframe(filtered_programmes_df[programmes_columns])
+        programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
+            'Application Basis (Sign up/ Nomination)',
+            'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
+            'E-learning link',
+            'Estimated Month of Programme',
+            'Remarks'
+        ]
+        st.dataframe(filtered_programmes_df[programmes_columns])  # Ensure all relevant columns are displayed
     else:
         st.warning("No Programmes found matching the filter query.")
