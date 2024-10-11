@@ -4,10 +4,6 @@ import json
 import requests
 import tiktoken
 
-# Set the title of the app
-st.title("EAS Learning Roadmap")
-@st.cache_data
-
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
 config_data = requests.get(config_url).json()
@@ -18,6 +14,10 @@ programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 
 BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
 bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
+
+# Set the title of the app
+st.title("EAS Learning Roadmap")
+@st.cache_data
 
 #Function for GPT
 def get_completion(prompt, model="gpt-4o-mini", temperature=0, top_p=1.0, max_tokens=1024, n=1):
