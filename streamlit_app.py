@@ -4,6 +4,10 @@ import json
 import requests
 import tiktoken
 
+# Set the title of the app
+st.title("EAS Learning Roadmap")
+@st.cache_data
+
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
 config_data = requests.get(config_url).json()
@@ -54,10 +58,6 @@ def clean_text(text):
     text = text.replace('�', '')  
     text = text.replace('?', '')   
     return text.strip()
-
-# Set the title of the app
-st.title("EAS Learning Roadmap")
-@st.cache_data
 
 # Introduction text <SUGGEST TO REMOVE THIS>
 st.markdown(
