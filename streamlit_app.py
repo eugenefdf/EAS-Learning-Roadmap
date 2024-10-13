@@ -41,7 +41,6 @@ if page == "About Us":
     display_about_us()
 
 else:
-
     # Create filters for Sector and Dimension/Learning Area below the title
     unique_sectors = bi_df['Sector'].unique()
     unique_sectors = ['Select All Sectors'] + unique_sectors.tolist()  
@@ -77,15 +76,20 @@ else:
         if selected_dimension != "Select All Dimension/Learning Areas":
             filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Dimension'] == selected_dimension.replace("Select All Dimension/Learning Areas", "")]
 
-        # Create columns for Programmes DataFrame
-        programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
+       # Create columns for Programmes DataFrame
+        programmes_columns = [
+            'Programme',
+            'Entry Type (New/ Recurring)',
+            'Sector',
+            'Dimension',
+            'Learning Area'
+        ] + [f"Type of Course - {col}" for col in selected_columns] + [
             'Application Basis (Sign up/ Nomination)',
             'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
             'E-learning link',
             'Estimated Month of Programme',
             'Remarks'
         ]
-
         # Month mapping and abbreviations
         month_map = config_data['months']
         month_abbreviations = config_data['month_abbreviations']
