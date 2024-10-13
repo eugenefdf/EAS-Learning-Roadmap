@@ -34,6 +34,11 @@ def log_token_usage(user_input, response):
     if len(st.session_state['token_log']) > 5:
         st.session_state['token_log'] = st.session_state['token_log'][-5:]
 
+def clear_token_log():
+    """Clear the token log."""
+    st.session_state['token_log'] = []
+    st.success("Token log has been cleared.")
+
 def display_token_counter():
     """Display the token counter page and log."""
     # Initialize session state for token log if it doesn't exist
@@ -41,6 +46,11 @@ def display_token_counter():
         st.session_state['token_log'] = []
 
     st.write("### Token Usage Log")
+    
+    # Add a button to clear the log
+    if st.button("Clear Token Log"):
+        clear_token_log()
+
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry['user_input']}")
