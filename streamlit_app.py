@@ -122,21 +122,25 @@ else:
                 course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
                 filtered_programmes_df = filtered_programmes_df[course_mask]
 
-      # Filter based on the selected roles, only if any role is selected
+            # Filter based on the selected roles, only if any role is selected
         if selected_columns and not filtered_programmes_df.empty:
             # Create a mask to filter the DataFrame based on selected roles
             role_mask = filtered_programmes_df[selected_columns].notna().any(axis=1)
             filtered_programmes_df = filtered_programmes_df[role_mask]
 
             # Rename the role columns to add the prefix "Type of Course - "
-            filtered_programmes_df.rename(columns={col: f"Type of Course - {col}" for col in selected_columns if col in filtered_programmes_df.columns}, inplace=True)
+            renamed_columns = {col: f"Type of Course - {col}" for col in selected_columns if col in filtered_programmes_df.columns}
+            filtered_programmes_df.rename(columns=renamed_columns, inplace=True)
 
         # Check if there are still rows after filtering; if empty, display a warning
         if filtered_programmes_df.empty:
             st.warning("No Programmes found matching the filter query.")
         else:
+            # Ensure programmes_columns contains only columns present in the DataFrame
+            valid_programmes_columns = [col for col in programmes_columns if col in filtered_programmes_df.columns]
+
             st.write("### Available Programmes")
-            st.dataframe(filtered_programmes_df[programmes_columns])
+            st.dataframe(filtered_programmes_df[valid_programmes_columns])
 
     # Initialize session state for conversation history
     if 'conversation_history' not in st.session_state:
