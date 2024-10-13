@@ -3,6 +3,7 @@ import pandas as pd
 import json
 import requests
 import tiktoken
+from about_us import display_about_us
 
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
@@ -17,6 +18,23 @@ bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 
 # Set the title of the app
 st.title("EAS Learning Roadmap")
+
+# Sidebar for navigation
+page = st.sidebar.selectbox("Navigate to:", ("Home", "Programmes", "Behavioural Indicators", "About Us"))
+
+# Define what happens on each subpage
+if page == "Home":
+    st.write("Welcome to the EAS Learning Roadmap app. Use the sidebar to navigate.")
+    # Add home page content here, if needed
+
+elif page == "Programmes":
+    # Existing code to display Programmes page
+
+elif page == "Behavioural Indicators":
+    # Existing code to display Behavioural Indicators page
+
+elif page == "About Us":
+    display_about_us()  # Call the function from the imported "about_us" script
 
 # Function to clean up DataFrame by stripping whitespace from all string columns
 def clean_dataframe(df):
