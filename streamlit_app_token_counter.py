@@ -52,6 +52,10 @@ def display_token_counter():
     st.write("### Token Usage Log")
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
+            # Check if the log entry should be skipped
+            if entry.get('summary_and_questions', 'N/A') == "N/A" and entry.get('input_tokens_used', 0) == 0 and entry.get('output_tokens_used', 0) == 0:
+                continue  # Skip this log entry
+
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
             st.write(f"**Summary and Questions:** {entry.get('summary_and_questions', 'N/A')}")
             st.write(f"**Input Tokens Used:** {entry.get('input_tokens_used', 0)}")
