@@ -152,17 +152,41 @@ else:
 
         st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
         
+            # Function to check for malicious input using the LLM
+        def check_malicious_input_with_llm(user_input):
+            """Check for malicious user input using the LLM."""
+            llm_prompt = f"Evaluate the following user input for any malicious intent or harmful content: {user_input}"
+
+            # Send request to OpenAI API for evaluation
+            evaluation_response = get_completion(llm_prompt)
+            
+            # Here we can define what a harmful or malicious input looks like
+            if "malicious" in evaluation_response.lower() or "harmful" in evaluation_response.lower():
+                return True
+            return False
+
+        # Display initial message
+        st.chat_message("assistant", avatar=None).write(
+            'Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. '
+            'In the text box below, please provide any additional information (e.g., preferred mode of learning, preferred month) to streamline your search. '
+            'If you do not have any additional criteria, you can just indicate: "No additional considerations."'
+        )
+
         # Handle user input
         userinput = st.chat_input(placeholder="Tell us more?", key=None)
 
         if userinput:  # Check if userinput is not None
+            # Check for malicious input using the LLM
+            if check_malicious_input_with_llm(userinput):
+                # Provide a warning if malicious input is detected
+                st.warning("Warning: Your input may contain malicious content and has been blocked.")
+                st.stop()  # Stop further processing
+
+            # Append valid user input to conversation history
             st.session_state['conversation_history'].append(f"User: {userinput}")
 
             # Prepare the conversation history as part of the prompt
             conversation_context = "\n".join(st.session_state['conversation_history'])
-
-            # Ensure filtered_programmes_df is a string
-            programmes_string = filtered_programmes_df.to_string(index=False)  # or .to_json() if needed
 
             # Prompt using history and new input
             prompt = f"""
@@ -175,41 +199,23 @@ else:
                 </userinput>
 
                 <programmes>
-                {programmes_string}
+                {filtered_programmes_df}
                 </programmes>
 
                 Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
             """
-
-            # Define the get_completion function
-            def get_completion(prompt):
-                headers = {
-                    "Authorization": f"Bearer {OPENAI_API_KEY}",
-                    "Content-Type": "application/json"
-                }
-                
-                data = {
-                    "model": OPENAI_MODEL_NAME,
-                    "messages": [
-                        {"role": "user", "content": prompt}
-                    ],
-                    "max_tokens": 1000,  # Adjust based on your needs
-                }
-                
-                try:
-                    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
-                    response.raise_for_status()  # Raise an error for bad responses
-                    response_data = response.json()
-                    return response_data['choices'][0]['message']['content']
-                except requests.exceptions.RequestException as e:
-                    st.error(f"Error: {e}")
-                    return "I'm sorry, there was an error processing your request."
 
             # Generate response from the chatbot
             response = get_completion(prompt)
 
             # Log the token usage
             log_token_usage(userinput, response)
+
+            # Summarize user input and generate questions
+            summary_and_questions = summarize_and_generate_questions(userinput)
+
+            # Provide summary and questions to the user
+            st.chat_message("assistant", avatar=None).write(summary_and_questions)
 
             # Update conversation history
             st.session_state['conversation_history'].append(f"Assistant: {response}")
@@ -220,5 +226,4 @@ else:
                     st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
                 else:
                     st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
-
 
