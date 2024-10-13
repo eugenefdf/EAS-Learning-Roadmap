@@ -2,7 +2,7 @@ import streamlit as st
 import tiktoken
 
 # Token counting constants
-TOKEN_PRICE = 0.00000015  # Example: price per token in USD for OpenAI
+TOKEN_PRICE = 0.00000015  # Updated price per token in USD for OpenAI
 
 # Use the tokenizer for the specific model
 def get_tokenizer():
@@ -30,6 +30,10 @@ def log_token_usage(user_input, response):
         "response": response
     })
 
+    # Keep only the last 5 entries in the log
+    if len(st.session_state['token_log']) > 5:
+        st.session_state['token_log'] = st.session_state['token_log'][-5:]
+
 def display_token_counter():
     """Display the token counter page and log."""
     # Initialize session state for token log if it doesn't exist
@@ -37,18 +41,11 @@ def display_token_counter():
         st.session_state['token_log'] = []
 
     st.write("### Token Usage Log")
-
-    # Button to clear the log
-    if st.button("Clear Log"):
-        st.session_state['token_log'] = []
-        st.success("Token log cleared.")
-
-    # Display the last 5 entries
     if st.session_state['token_log']:
-        for entry in st.session_state['token_log'][-5:]:  # Display only the last 5 entries
+        for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry['user_input']}")
             st.write(f"**Tokens Used:** {entry['tokens_used']}")
-            st.write(f"**Estimated Cost:** ${entry['estimated_cost']:.4f}")
+            st.write(f"**Estimated Cost:** ${entry['estimated_cost']:.8f}")  # Adjusted decimal places for clarity
             st.write(f"**Assistant Response:** {entry['response']}")
             st.write("---")  # Separator for readability
     else:
