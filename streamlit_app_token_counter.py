@@ -30,8 +30,7 @@ def log_token_usage(user_input, summary_and_questions, response):
         "summary_and_questions": summary_and_questions,
         "input_tokens_used": input_tokens_used,
         "output_tokens_used": output_tokens_used,
-        "estimated_cost": estimated_cost,
-        "response": response
+        "estimated_cost": estimated_cost
     })
 
     # Keep only the last 5 entries
@@ -50,7 +49,7 @@ def display_token_counter():
 
     # Clear log button at the top
     if st.button("Clear Log"):
-        st.session_state['token_log'] = []  # Clear the log
+        clear_token_log()  # Clear the log
         st.success("Token log cleared.")
 
     st.write("### Token Usage Log")
@@ -64,7 +63,6 @@ def display_token_counter():
             st.write(f"**Input Tokens Used:** {entry.get('input_tokens_used', 0)}")
             st.write(f"**Output Tokens Used:** {entry.get('output_tokens_used', 0)}")
             st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
-            st.write(f"**Assistant Response:** {entry.get('response', 'N/A')}")
             st.write("---")  # Separator for readability
     else:
         st.write("No token usage data available yet.")
