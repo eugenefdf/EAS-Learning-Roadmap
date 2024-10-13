@@ -165,13 +165,6 @@ else:
                 return True
             return False
 
-        # Display initial message
-        st.chat_message("assistant", avatar=None).write(
-            'Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. '
-            'In the text box below, please provide any additional information (e.g., preferred mode of learning, preferred month) to streamline your search. '
-            'If you do not have any additional criteria, you can just indicate: "No additional considerations."'
-        )
-
         # Handle user input
         userinput = st.chat_input(placeholder="Tell us more?", key=None)
 
