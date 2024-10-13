@@ -37,8 +37,6 @@ def display_token_counter():
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry['user_input']}")
-            st.write(f"**Malicious Check:** {entry['malicious_check']}")
-            st.write(f"**Summary and Questions:** {entry['summary_and_questions']}")
             st.write(f"**Tokens Used:** {entry['tokens_used']}")
             st.write(f"**Estimated Cost:** ${entry['estimated_cost']:.8f}")  # Adjusted decimal places for clarity
             st.write(f"**Assistant Response:** {entry['response']}")
@@ -46,17 +44,15 @@ def display_token_counter():
     else:
         st.write("No token usage data available yet.")
 
-def log_token_usage(user_input, response, summary_and_questions):
-    """Log the token usage for user input, assistant response, and summary/questions."""
+def log_token_usage(user_input, response):
+    """Log the token usage for user input and assistant response."""
     # Calculate token usage
-    tokens_used = count_tokens(user_input) + count_tokens(response) + count_tokens(summary_and_questions)
+    tokens_used = count_tokens(user_input) + count_tokens(response)
     estimated_cost = estimate_cost(tokens_used)
 
     # Append the log entry to the session state
     st.session_state['token_log'].append({
         "user_input": user_input,
-        "malicious_check": "No",  # As we know it is non-malicious
-        "summary_and_questions": summary_and_questions,
         "tokens_used": tokens_used,
         "estimated_cost": estimated_cost,
         "response": response
