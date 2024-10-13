@@ -19,17 +19,13 @@ def estimate_cost(tokens_used):
 
 def log_token_usage(user_input, summary_and_questions, response):
     """Log the token usage for each conversation."""
-    tokens_used = count_tokens(user_input) + count_tokens(summary_and_questions) + count_tokens(response)
+    tokens_used = count_tokens(user_input) + count_tokens(response)
     estimated_cost = estimate_cost(tokens_used)
 
-    # Log the entry with a limit of last 5 responses
-    if 'token_log' not in st.session_state:
-        st.session_state['token_log'] = []
-
-    # Append new log entry
+    # Log the entry
     st.session_state['token_log'].append({
         "user_input": user_input,
-        "summary_and_questions": summary_and_questions,
+        "summary_and_questions": summary_and_questions,  # Add this line
         "tokens_used": tokens_used,
         "estimated_cost": estimated_cost,
         "response": response
@@ -53,7 +49,7 @@ def display_token_counter():
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry['user_input']}")
-            st.write(f"**Summary and Questions:** {entry['summary_and_questions']}")
+            st.write(f"**Summary and Questions:** {entry['summary_and_questions']}")  # Add this line
             st.write(f"**Tokens Used:** {entry['tokens_used']}")
             st.write(f"**Estimated Cost:** ${entry['estimated_cost']:.4f}")
             st.write(f"**Assistant Response:** {entry['response']}")
@@ -62,6 +58,6 @@ def display_token_counter():
         st.write("No token usage data available yet.")
 
     # Button to clear the log
-    if st.button("Clear Log"):
-        clear_token_log()
-        st.success("Token log cleared.")
+  if st.button("Clear Log"):
+    st.session_state['token_log'] = []  # Clear the log
+    st.success("Token log cleared.")
