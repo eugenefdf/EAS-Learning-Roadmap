@@ -8,6 +8,58 @@ from streamlit_app_about_us import display_about_us
 from streamlit_app_methodology import display_methodology
 from streamlit_app_token_counter import display_token_counter, log_token_usage
 
+# Clean the DataFrames (this will run regardless of the selected page)
+def clean_dataframe(df):
+    for col in df.select_dtypes(include=['object']).columns:
+        df[col] = df[col].str.strip()
+    return df
+
+# Function to check if any month in the list falls within the selected range
+def is_month_in_range(months, min_index, max_index, month_map):
+    if "All year round" in months:
+        return True
+    month_indices = [month_map[month.strip()] for month in months if month.strip() in month_map]
+    return any(min_index <= index <= max_index for index in month_indices)
+
+# Define the get_completion function
+def get_completion(prompt):
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "model": OPENAI_MODEL_NAME,
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": 1000,  # Adjust based on your needs
+    }
+    
+    try:
+        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
+        response.raise_for_status()  # Raise an error for bad responses
+        response_data = response.json()
+        return response_data['choices'][0]['message']['content']
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error: {e}")
+        return "I'm sorry, there was an error processing your request."
+    except Exception as ex:
+        st.error(f"Unexpected error: {ex}")
+        return "An unexpected error occurred."
+    
+# Function to check for malicious input using the LLM
+def check_malicious_input_with_llm(user_input):
+    """Check for malicious user input using the LLM."""
+    llm_prompt = f"Evaluate the following user input for any malicious intent or harmful content: {user_input}"
+
+    # Send request to OpenAI API for evaluation
+    evaluation_response = get_completion(llm_prompt)
+    
+    # Here we can define what a harmful or malicious input looks like
+    if "malicious" in evaluation_response.lower() or "harmful" in evaluation_response.lower():
+        return True
+    return False
+
+
 # Access your API key and model name from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 OPENAI_MODEL_NAME = st.secrets["OPENAI_MODEL_NAME"]
@@ -32,12 +84,6 @@ page = st.sidebar.selectbox("Navigate to:", ("Home", "About Us", "Methodology", 
 # Only show Home page content if 'Home' is selected
 if page == "Home":
     st.write("Welcome to the EAS Learning Roadmap app. Use the sidebar to navigate.")
-
-# Clean the DataFrames (this will run regardless of the selected page)
-def clean_dataframe(df):
-    for col in df.select_dtypes(include=['object']).columns:
-        df[col] = df[col].str.strip()
-    return df
 
 programmes_df = clean_dataframe(programmes_df)
 bi_df = clean_dataframe(bi_df)
@@ -115,13 +161,6 @@ else:
 
         st.write(f"Selected month range: {min_month_abbr} to {max_month_abbr}")
 
-        # Function to check if any month in the list falls within the selected range
-        def is_month_in_range(months, min_index, max_index, month_map):
-            if "All year round" in months:
-                return True
-            month_indices = [month_map[month.strip()] for month in months if month.strip() in month_map]
-            return any(min_index <= index <= max_index for index in month_indices)
-
         # Filter based on the selected month range
         if not filtered_programmes_df.empty:
             filtered_programmes_df = filtered_programmes_df[
@@ -151,19 +190,7 @@ else:
             st.session_state['conversation_history'] = []
 
         st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
-        
-            # Function to check for malicious input using the LLM
-        def check_malicious_input_with_llm(user_input):
-            """Check for malicious user input using the LLM."""
-            llm_prompt = f"Evaluate the following user input for any malicious intent or harmful content: {user_input}"
-
-            # Send request to OpenAI API for evaluation
-            evaluation_response = get_completion(llm_prompt)
-            
-            # Here we can define what a harmful or malicious input looks like
-            if "malicious" in evaluation_response.lower() or "harmful" in evaluation_response.lower():
-                return True
-            return False
+    
 
         # Handle user input
         userinput = st.chat_input(placeholder="Tell us more?", key=None)
