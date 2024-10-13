@@ -76,26 +76,6 @@ def summarize_and_generate_questions(user_input):
 
     return summary_response
 
-
-def log_token_usage(user_input, response, summary_and_questions):
-    """Log the token usage for each conversation along with additional data."""
-    tokens_used = count_tokens(user_input) + count_tokens(response) + count_tokens(summary_and_questions)
-    estimated_cost = estimate_cost(tokens_used)
-
-    # Log the entry
-    st.session_state['token_log'].append({
-        "user_input": user_input,
-        "malicious_check": "No",  # Change this if malicious input is detected
-        "summary_and_questions": summary_and_questions,
-        "tokens_used": tokens_used,
-        "estimated_cost": estimated_cost,
-        "response": response
-    })
-
-    # Keep only the last 5 entries in the log
-    if len(st.session_state['token_log']) > 5:
-        st.session_state['token_log'] = st.session_state['token_log'][-5:]
-
 ### End of Functions ###
 
 
