@@ -5,6 +5,8 @@ import json
 import requests
 import tiktoken
 from streamlit_app_about_us import display_about_us
+from streamlit_app_methodology import display_methodology
+from streamlit_app_token_counter import display_token_counter
 
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
@@ -45,7 +47,7 @@ elif page == "Methodology":
 
 elif page == "Token Counter":
     display_token_counter()
-    
+
 else:
     # Create filters for Sector and Dimension/Learning Area below the title
     unique_sectors = bi_df['Sector'].unique()
