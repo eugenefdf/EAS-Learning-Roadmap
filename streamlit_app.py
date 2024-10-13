@@ -146,78 +146,78 @@ else:
             st.write("### Available Programmes")
             st.dataframe(filtered_programmes_df[programmes_columns])
 
-    # Initialize session state for conversation history
-    if 'conversation_history' not in st.session_state:
-        st.session_state['conversation_history'] = []
+        # Initialize session state for conversation history
+        if 'conversation_history' not in st.session_state:
+            st.session_state['conversation_history'] = []
 
-    st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
-    userinput = st.chat_input(placeholder="Tell us more  ?", key=None, max_chars=None, disabled=False, on_submit=None, args=None, kwargs=None)
+        st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
+        userinput = st.chat_input(placeholder="Tell us more  ?", key=None, max_chars=None, disabled=False, on_submit=None, args=None, kwargs=None)
 
-    # Define the get_completion function
-def get_completion(prompt):
-    headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    
-    data = {
-        "model": OPENAI_MODEL_NAME,
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
-        "max_tokens": 1000,  # Adjust based on your needs
-    }
-    
-    try:
-        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
-        response.raise_for_status()  # Raise an error for bad responses
-        response_data = response.json()
-        return response_data['choices'][0]['message']['content']
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error: {e}")
-        return "I'm sorry, there was an error processing your request."
+        # Define the get_completion function
+    def get_completion(prompt):
+        headers = {
+            "Authorization": f"Bearer {OPENAI_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        data = {
+            "model": OPENAI_MODEL_NAME,
+            "messages": [
+                {"role": "user", "content": prompt}
+            ],
+            "max_tokens": 1000,  # Adjust based on your needs
+        }
+        
+        try:
+            response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
+            response.raise_for_status()  # Raise an error for bad responses
+            response_data = response.json()
+            return response_data['choices'][0]['message']['content']
+        except requests.exceptions.RequestException as e:
+            st.error(f"Error: {e}")
+            return "I'm sorry, there was an error processing your request."
 
-# Handle user input
-if userinput:
-    st.session_state['conversation_history'].append(f"User: {userinput}")
+    # Handle user input
+    if userinput:
+        st.session_state['conversation_history'].append(f"User: {userinput}")
 
-    # Prepare the conversation history as part of the prompt
-    conversation_context = "\n".join(st.session_state['conversation_history'])
+        # Prepare the conversation history as part of the prompt
+        conversation_context = "\n".join(st.session_state['conversation_history'])
 
-    # Ensure filtered_programmes_df is a string
-    programmes_string = filtered_programmes_df.to_string(index=False)  # or .to_json() if needed
+        # Ensure filtered_programmes_df is a string
+        programmes_string = filtered_programmes_df.to_string(index=False)  # or .to_json() if needed
 
-    # Prompt using history and new input
-    prompt = f"""
-        <conversationhistory>
-        {conversation_context}
-        </conversationhistory>
+        # Prompt using history and new input
+        prompt = f"""
+            <conversationhistory>
+            {conversation_context}
+            </conversationhistory>
 
-        <userinput>
-        {userinput}
-        </userinput>
+            <userinput>
+            {userinput}
+            </userinput>
 
-        <programmes>
-        {programmes_string}
-        </programmes>
+            <programmes>
+            {programmes_string}
+            </programmes>
 
-        Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
-    """
+            Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
+        """
 
-    # Generate response from the chatbot
-    response = get_completion(prompt)
+        # Generate response from the chatbot
+        response = get_completion(prompt)
 
-    # Log the token usage
-    log_token_usage(userinput, response)
+        # Log the token usage
+        log_token_usage(userinput, response)
 
-    # Update conversation history
-    st.session_state['conversation_history'].append(f"Assistant: {response}")
+        # Update conversation history
+        st.session_state['conversation_history'].append(f"Assistant: {response}")
 
-    # Display the conversation history
-    for message in st.session_state['conversation_history']:
-        if message.startswith("User:"):
-            st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
-        else:
-            st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
+        # Display the conversation history
+        for message in st.session_state['conversation_history']:
+            if message.startswith("User:"):
+                st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
+            else:
+                st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
 
 
