@@ -62,6 +62,20 @@ def check_malicious_input_with_llm(user_input):
         return True
     return False
 
+def summarize_and_generate_questions(user_input):
+    """Summarize user input and generate questions."""
+    summary_prompt = f"Summarize the following input and generate 3 questions for further inquiry: {user_input}. Just generate the 3 questions and do not include anything else."
+
+    # Send request to OpenAI API for summarization
+    summary_response = get_completion(summary_prompt)
+    
+    # Check if the response is empty or an error message
+    if not summary_response:
+        st.error("Failed to generate summary and questions.")
+        return "No summary generated."
+
+    return summary_response
+
 ### End of Functions ###
 
 
@@ -248,11 +262,11 @@ else:
                 # Generate response from the chatbot
                 response = get_completion(prompt)
 
-                # Log the token usage and other details
-                log_token_usage(userinput, response)
+                # Summarize questions for logging
+                summary_and_questions = summarize_and_generate_questions(userinput)
 
-                # Provide summary and questions to the user
-                st.chat_message("assistant", avatar=None).write(summary_and_questions)
+                # Log the token usage and other details
+                log_token_usage(userinput, summary_and_questions, response)
 
                 # Update conversation history
                 st.session_state['conversation_history'].append(f"Assistant: {response}")
