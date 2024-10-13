@@ -54,7 +54,7 @@ def display_token_counter():
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
             st.write(f"**Summary and Questions:** {entry.get('summary_and_questions', 'N/A')}")
             st.write(f"**Tokens Used:** {entry.get('tokens_used', 0)}")
-            st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.4f}")
+            st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
             st.write(f"**Assistant Response:** {entry.get('response', 'N/A')}")
             st.write("---")  # Separator for readability
     else:
