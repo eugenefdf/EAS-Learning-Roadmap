@@ -37,8 +37,15 @@ def display_token_counter():
         st.session_state['token_log'] = []
 
     st.write("### Token Usage Log")
+
+    # Button to clear the log
+    if st.button("Clear Log"):
+        st.session_state['token_log'] = []
+        st.success("Token log cleared.")
+
+    # Display the last 5 entries
     if st.session_state['token_log']:
-        for entry in st.session_state['token_log']:
+        for entry in st.session_state['token_log'][-5:]:  # Display only the last 5 entries
             st.write(f"**User Input:** {entry['user_input']}")
             st.write(f"**Tokens Used:** {entry['tokens_used']}")
             st.write(f"**Estimated Cost:** ${entry['estimated_cost']:.4f}")
