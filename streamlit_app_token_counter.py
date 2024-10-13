@@ -66,3 +66,6 @@ def display_token_counter():
             st.write("---")  # Separator for readability
     else:
         st.write("No token usage data available yet.")
+
+# Call the display function to render the token counter
+display_token_counter()
