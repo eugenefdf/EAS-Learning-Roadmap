@@ -122,20 +122,14 @@ else:
                 course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
                 filtered_programmes_df = filtered_programmes_df[course_mask]
 
-        # Filter based on the selected roles, only if any role is selected
+      # Filter based on the selected roles, only if any role is selected
         if selected_columns and not filtered_programmes_df.empty:
-            # Create a list of prefixed role columns
-            prefixed_role_columns = [f"Type of Course - {col}" for col in selected_columns]
-            
-            # Ensure only columns that exist in the DataFrame are used for masking
-            existing_role_columns = [col for col in prefixed_role_columns if col in filtered_programmes_df.columns]
+            # Create a mask to filter the DataFrame based on selected roles
+            role_mask = filtered_programmes_df[selected_columns].notna().any(axis=1)
+            filtered_programmes_df = filtered_programmes_df[role_mask]
 
-            if existing_role_columns:
-                role_mask = filtered_programmes_df[existing_role_columns].notna().any(axis=1)
-                filtered_programmes_df = filtered_programmes_df[role_mask]
-
-                # Rename columns to add the prefix "Type of Course - "
-                filtered_programmes_df.rename(columns={col: f"Type of Course - {col}" for col in existing_role_columns}, inplace=True)
+            # Rename the role columns to add the prefix "Type of Course - "
+            filtered_programmes_df.rename(columns={col: f"Type of Course - {col}" for col in selected_columns if col in filtered_programmes_df.columns}, inplace=True)
 
         # Check if there are still rows after filtering; if empty, display a warning
         if filtered_programmes_df.empty:
