@@ -165,7 +165,7 @@ def get_completion(prompt):
         "messages": [
             {"role": "user", "content": prompt}
         ],
-        "max_tokens": 150,  # Adjust based on your needs
+        "max_tokens": 1000,  # Adjust based on your needs
     }
     
     try:
@@ -176,8 +176,6 @@ def get_completion(prompt):
     except requests.exceptions.RequestException as e:
         st.error(f"Error: {e}")
         return "I'm sorry, there was an error processing your request."
-
-# ... existing chat message code ...
 
 # Handle user input
 if userinput:
@@ -209,6 +207,10 @@ if userinput:
     # Generate response from the chatbot
     response = get_completion(prompt)
 
+    # Log the token usage
+    log_token_usage(userinput, response)
+
+    # Update conversation history
     st.session_state['conversation_history'].append(f"Assistant: {response}")
 
     # Display the conversation history
