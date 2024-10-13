@@ -9,8 +9,8 @@ from streamlit_app_methodology import display_methodology
 from streamlit_app_token_counter import display_token_counter, log_token_usage
 
 # Access your API key and model name from Streamlit secrets
-OPENAI_API_KEY = st.secrets["general"]["OPENAI_API_KEY"]
-OPENAI_MODEL_NAME = st.secrets["general"]["OPENAI_MODEL_NAME"]
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+OPENAI_MODEL_NAME = st.secrets["OPENAI_MODEL_NAME"]
 
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
