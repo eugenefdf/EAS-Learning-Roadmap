@@ -6,7 +6,7 @@ import requests
 import tiktoken
 from streamlit_app_about_us import display_about_us
 from streamlit_app_methodology import display_methodology
-from streamlit_app_token_counter import display_token_counter
+from streamlit_app_token_counter import display_token_counter, log_token_usage
 
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
@@ -184,14 +184,8 @@ else:
             elif message.startswith("Assistant:"):
                 st.chat_message("assistant").write(message[11:])
         
-        # Count tokens for the user's input
-        tokens_used = count_tokens(prompt) + count_tokens(response)
-        
-        # Store token count for this query in the list
-        token_counts.append(tokens_used)
-        
-        # Display token countlist, <REMOVE THIS LATER>
-        st.write(token_counts)
+         # Log token usage
+        log_token_usage(userinput, response)
 
 
 
