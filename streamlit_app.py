@@ -205,81 +205,81 @@ else:
             st.write("### Available Programmes")
             st.dataframe(filtered_programmes_df[programmes_columns])
 
-    # Check if any roles are selected before displaying the chatbot
-    if selected_columns:
-        # Initialize session state for conversation history and token log
-        if 'conversation_history' not in st.session_state:
-            st.session_state['conversation_history'] = []
+        # Check if any roles are selected before displaying the chatbot
+        if selected_columns:
+            # Initialize session state for conversation history and token log
+            if 'conversation_history' not in st.session_state:
+                st.session_state['conversation_history'] = []
 
-        if 'token_log' not in st.session_state:
-            st.session_state['token_log'] = []
+            if 'token_log' not in st.session_state:
+                st.session_state['token_log'] = []
 
-        # Display the initial message from the assistant
-        st.chat_message("assistant", avatar=None).write(
-            'Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. '
-            'In the text box below, please provide any additional information (e.g., preferred mode of learning, preferred month) to streamline your search. '
-            'If you do not have any additional criteria, you can just indicate: "No additional considerations."'
-        )
+            # Display the initial message from the assistant
+            st.chat_message("assistant", avatar=None).write(
+                'Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. '
+                'In the text box below, please provide any additional information (e.g., preferred mode of learning, preferred month) to streamline your search. '
+                'If you do not have any additional criteria, you can just indicate: "No additional considerations."'
+            )
 
-        # Handle user input
-        userinput = st.chat_input(placeholder="Tell us more?", key=None)
+            # Handle user input
+            userinput = st.chat_input(placeholder="Tell us more?", key=None)
 
-        if userinput:  # Check if userinput is not None
-            # Check for malicious input using the LLM
-            malicious_check = check_malicious_input_with_llm(userinput)
-            if malicious_check:
-                # Provide a warning if malicious input is detected
-                st.warning("Warning: Your input may contain malicious content and has been blocked.")
-                st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "Yes"})
-                st.stop()  # Stop further processing
-            else:
-                # Log non-malicious input
-                st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "No"})
-
-            # Append valid user input to conversation history
-            st.session_state['conversation_history'].append(f"User: {userinput}")
-
-            # Prepare the conversation history as part of the prompt
-            conversation_context = "\n".join(st.session_state['conversation_history'])
-
-            # Prompt using history and new input
-            prompt = f"""
-                <conversationhistory>
-                {conversation_context}
-                </conversationhistory>
-
-                <userinput>
-                {userinput}
-                </userinput>
-
-                <programmes>
-                {filtered_programmes_df}
-                </programmes>
-
-                Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
-            """
-
-            # Generate response from the chatbot
-            response = get_completion(prompt)
-
-            # Summarize questions for logging
-            summary_and_questions = summarize_and_generate_questions(userinput)
-
-            # Log the token usage and other details
-            log_token_usage(userinput, summary_and_questions, response)
-
-            # Provide summary and questions to the user
-            st.chat_message("assistant", avatar=None).write(summary_and_questions)
-
-            # Update conversation history
-            st.session_state['conversation_history'].append(f"Assistant: {response}")
-
-            # Display the conversation history
-            for message in st.session_state['conversation_history']:
-                if message.startswith("User:"):
-                    st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
+            if userinput:  # Check if userinput is not None
+                # Check for malicious input using the LLM
+                malicious_check = check_malicious_input_with_llm(userinput)
+                if malicious_check:
+                    # Provide a warning if malicious input is detected
+                    st.warning("Warning: Your input may contain malicious content and has been blocked.")
+                    st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "Yes"})
+                    st.stop()  # Stop further processing
                 else:
-                    st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
-    else:
-        # Show a message in the chat indicating that roles need to be selected
-        st.chat_message("assistant", avatar=None).write("Please select at least one role to enable the chatbot.")
+                    # Log non-malicious input
+                    st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "No"})
+
+                # Append valid user input to conversation history
+                st.session_state['conversation_history'].append(f"User: {userinput}")
+
+                # Prepare the conversation history as part of the prompt
+                conversation_context = "\n".join(st.session_state['conversation_history'])
+
+                # Prompt using history and new input
+                prompt = f"""
+                    <conversationhistory>
+                    {conversation_context}
+                    </conversationhistory>
+
+                    <userinput>
+                    {userinput}
+                    </userinput>
+
+                    <programmes>
+                    {filtered_programmes_df}
+                    </programmes>
+
+                    Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
+                """
+
+                # Generate response from the chatbot
+                response = get_completion(prompt)
+
+                # Summarize questions for logging
+                summary_and_questions = summarize_and_generate_questions(userinput)
+
+                # Log the token usage and other details
+                log_token_usage(userinput, summary_and_questions, response)
+
+                # Provide summary and questions to the user
+                st.chat_message("assistant", avatar=None).write(summary_and_questions)
+
+                # Update conversation history
+                st.session_state['conversation_history'].append(f"Assistant: {response}")
+
+                # Display the conversation history
+                for message in st.session_state['conversation_history']:
+                    if message.startswith("User:"):
+                        st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
+                    else:
+                        st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
+        else:
+            # Show a message in the chat indicating that roles need to be selected
+            st.chat_message("assistant", avatar=None).write("Please select at least one role to enable the chatbot.")
