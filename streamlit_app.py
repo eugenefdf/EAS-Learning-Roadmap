@@ -25,16 +25,6 @@ page = st.sidebar.selectbox("Navigate to:", ("Home", "Programmes", "Behavioural 
 # Define what happens on each subpage
 if page == "Home":
     st.write("Welcome to the EAS Learning Roadmap app. Use the sidebar to navigate.")
-    # Add home page content here, if needed
-
-elif page == "Programmes":
-    # Existing code to display Programmes page
-
-elif page == "Behavioural Indicators":
-    # Existing code to display Behavioural Indicators page
-
-elif page == "About Us":
-    display_about_us()  # Call the function from the imported "about_us" script
 
 # Function to clean up DataFrame by stripping whitespace from all string columns
 def clean_dataframe(df):
@@ -189,3 +179,7 @@ if userinput:
     
     # Display token countlist, <REMOVE THIS LATER>
     st.write(token_counts)
+
+elif page == "About Us":
+    display_about_us()  # Call the function from the imported "about_us" script
+
