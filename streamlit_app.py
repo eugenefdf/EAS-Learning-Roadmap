@@ -205,11 +205,9 @@ else:
             st.write("### Available Programmes")
             st.dataframe(filtered_programmes_df[programmes_columns])
 
-         # Initialize session state for conversation history and token log
+            # Initialize session state for conversation history and token log
         if 'conversation_history' not in st.session_state:
             st.session_state['conversation_history'] = []
-        if 'token_log' not in st.session_state:
-            st.session_state['token_log'] = []
 
         st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
 
@@ -254,8 +252,10 @@ else:
             # Generate response from the chatbot
             response = get_completion(prompt)
 
-            # Log the token usage
+            # Summarize questions for logging
             summary_and_questions = summarize_and_generate_questions(userinput)
+
+            # Log the token usage and other details
             log_token_usage(userinput, summary_and_questions, response)
 
             # Provide summary and questions to the user
@@ -270,4 +270,8 @@ else:
                     st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
                 else:
                     st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
+
+        # Display token counter
+        if st.button("Show Token Counter"):
+            display_token_counter()
 
