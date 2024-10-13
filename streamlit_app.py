@@ -158,44 +158,69 @@ else:
     st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
     userinput = st.chat_input(placeholder="Tell us more  ?", key=None, max_chars=None, disabled=False, on_submit=None, args=None, kwargs=None)
 
-    # Handle user input
-    if userinput:
-        st.session_state['conversation_history'].append(f"User: {userinput}")
+    # Define the get_completion function
+def get_completion(prompt):
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "model": OPENAI_MODEL_NAME,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "max_tokens": 150,  # Adjust based on your needs
+    }
+    
+    try:
+        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)
+        response.raise_for_status()  # Raise an error for bad responses
+        response_data = response.json()
+        return response_data['choices'][0]['message']['content']
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error: {e}")
+        return "I'm sorry, there was an error processing your request."
 
-        # Prepare the conversation history as part of the prompt
-        conversation_context = "\n".join(st.session_state['conversation_history'])
+# ... existing chat message code ...
 
-        # Ensure filtered_programmes_df is a string
-        programmes_string = filtered_programmes_df.to_string(index=False)  # or .to_json() if needed
+# Handle user input
+if userinput:
+    st.session_state['conversation_history'].append(f"User: {userinput}")
 
-        # Prompt using history and new input
-        prompt = f"""
-            <conversationhistory>
-            {conversation_context}
-            </conversationhistory>
+    # Prepare the conversation history as part of the prompt
+    conversation_context = "\n".join(st.session_state['conversation_history'])
 
-            <userinput>
-            {userinput}
-            </userinput>
+    # Ensure filtered_programmes_df is a string
+    programmes_string = filtered_programmes_df.to_string(index=False)  # or .to_json() if needed
 
-            <programmes>
-            {programmes_string}
-            </programmes>
+    # Prompt using history and new input
+    prompt = f"""
+        <conversationhistory>
+        {conversation_context}
+        </conversationhistory>
 
-            Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
-        """
-        
-        # Generate response from the chatbot
-        response = get_completion(prompt)
+        <userinput>
+        {userinput}
+        </userinput>
 
-        st.session_state['conversation_history'].append(f"Assistant: {response}")
+        <programmes>
+        {programmes_string}
+        </programmes>
 
-        # Display the conversation history
-        for message in st.session_state['conversation_history']:
-            if message.startswith("User:"):
-                st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
-            else:
-                st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
+        Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
+    """
 
+    # Generate response from the chatbot
+    response = get_completion(prompt)
+
+    st.session_state['conversation_history'].append(f"Assistant: {response}")
+
+    # Display the conversation history
+    for message in st.session_state['conversation_history']:
+        if message.startswith("User:"):
+            st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
+        else:
+            st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
 
 
