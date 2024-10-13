@@ -66,7 +66,7 @@ def clean_text(text):
     #This Learning Roadmap focuses on learning provisions to equip you with the required functional competencies expected of SATs.<br><br> \
     #For more info on Our Core Competencies (OCC), you may refer to the OCC Guide book and the SAT Competency Framework.<br><br> </div>',
     #unsafe_allow_html=True
-)
+#)
 
 # Create filters for Sector and Dimension/Learning Area below the title
 unique_sectors = bi_df['Sector'].unique()
