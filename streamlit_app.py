@@ -20,7 +20,7 @@ bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 st.title("EAS Learning Roadmap")
 
 # Sidebar for navigation
-page = st.sidebar.selectbox("Navigate to:", ("Home", "Programmes", "Behavioural Indicators", "About Us"))
+page = st.sidebar.selectbox("Navigate to:", ("Home", "About Us", "Token Counter"))
 
 # Define what happens on each subpage
 if page == "Home":
