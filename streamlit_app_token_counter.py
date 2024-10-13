@@ -63,5 +63,3 @@ def display_token_counter():
 
 # Call the display function to render the token counter
 display_token_counter()
-
-# Additional logic can be added below
