@@ -256,7 +256,7 @@ else:
 
             # Log the token usage
             summary_and_questions = summarize_and_generate_questions(userinput)
-            log_token_usage(userinput, response)
+            log_token_usage(userinput, summary_and_questions, response)
 
             # Provide summary and questions to the user
             st.chat_message("assistant", avatar=None).write(summary_and_questions)
