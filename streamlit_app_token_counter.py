@@ -48,15 +48,22 @@ def display_token_counter():
     st.write("### Token Usage Log")
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
-            st.write(f"**User Input:** {entry['user_input']}")
-            st.write(f"**Summary and Questions:** {entry['summary_and_questions']}")  # Add this line
-            st.write(f"**Tokens Used:** {entry['tokens_used']}")
-            st.write(f"**Estimated Cost:** ${entry['estimated_cost']:.4f}")
-            st.write(f"**Assistant Response:** {entry['response']}")
+            # Debugging: Print entry to console
+            print(entry)  # This will output to your terminal/logs
+
+            st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
+            st.write(f"**Summary and Questions:** {entry.get('summary_and_questions', 'N/A')}")
+            st.write(f"**Tokens Used:** {entry.get('tokens_used', 0)}")
+            st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.4f}")
+            st.write(f"**Assistant Response:** {entry.get('response', 'N/A')}")
             st.write("---")  # Separator for readability
     else:
         st.write("No token usage data available yet.")
 
+    # Clear log button
+    if st.button("Clear Log"):
+        st.session_state['token_log'] = []  # Clear the log
+        st.success("Token log cleared.")
     # Button to clear the log
   if st.button("Clear Log"):
     st.session_state['token_log'] = []  # Clear the log
