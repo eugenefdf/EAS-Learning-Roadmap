@@ -17,23 +17,6 @@ def estimate_cost(tokens_used):
     """Estimate the cost based on tokens used."""
     return tokens_used * TOKEN_PRICE
 
-def log_token_usage(user_input, response):
-    """Log the token usage for each conversation."""
-    tokens_used = count_tokens(user_input) + count_tokens(response)
-    estimated_cost = estimate_cost(tokens_used)
-
-    # Log the entry
-    st.session_state['token_log'].append({
-        "user_input": user_input,
-        "tokens_used": tokens_used,
-        "estimated_cost": estimated_cost,
-        "response": response
-    })
-
-    # Keep only the last 5 entries in the log
-    if len(st.session_state['token_log']) > 5:
-        st.session_state['token_log'] = st.session_state['token_log'][-5:]
-
 def clear_token_log():
     """Clear the token log."""
     st.session_state['token_log'] = []
@@ -54,6 +37,8 @@ def display_token_counter():
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry['user_input']}")
+            st.write(f"**Malicious Check:** {entry['malicious_check']}")
+            st.write(f"**Summary and Questions:** {entry['summary_and_questions']}")
             st.write(f"**Tokens Used:** {entry['tokens_used']}")
             st.write(f"**Estimated Cost:** ${entry['estimated_cost']:.8f}")  # Adjusted decimal places for clarity
             st.write(f"**Assistant Response:** {entry['response']}")

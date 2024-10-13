@@ -76,6 +76,26 @@ def summarize_and_generate_questions(user_input):
 
     return summary_response
 
+
+def log_token_usage(user_input, response, summary_and_questions):
+    """Log the token usage for each conversation along with additional data."""
+    tokens_used = count_tokens(user_input) + count_tokens(response) + count_tokens(summary_and_questions)
+    estimated_cost = estimate_cost(tokens_used)
+
+    # Log the entry
+    st.session_state['token_log'].append({
+        "user_input": user_input,
+        "malicious_check": "No",  # Change this if malicious input is detected
+        "summary_and_questions": summary_and_questions,
+        "tokens_used": tokens_used,
+        "estimated_cost": estimated_cost,
+        "response": response
+    })
+
+    # Keep only the last 5 entries in the log
+    if len(st.session_state['token_log']) > 5:
+        st.session_state['token_log'] = st.session_state['token_log'][-5:]
+
 ### End of Functions ###
 
 
@@ -205,22 +225,28 @@ else:
             st.write("### Available Programmes")
             st.dataframe(filtered_programmes_df[programmes_columns])
 
-        # Initialize session state for conversation history
+         # Initialize session state for conversation history and token log
         if 'conversation_history' not in st.session_state:
             st.session_state['conversation_history'] = []
+        if 'token_log' not in st.session_state:
+            st.session_state['token_log'] = []
 
         st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
-    
 
         # Handle user input
         userinput = st.chat_input(placeholder="Tell us more?", key=None)
 
         if userinput:  # Check if userinput is not None
             # Check for malicious input using the LLM
-            if check_malicious_input_with_llm(userinput):
+            malicious_check = check_malicious_input_with_llm(userinput)
+            if malicious_check:
                 # Provide a warning if malicious input is detected
                 st.warning("Warning: Your input may contain malicious content and has been blocked.")
+                st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "Yes"})
                 st.stop()  # Stop further processing
+            else:
+                # Log non-malicious input
+                st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "No"})
 
             # Append valid user input to conversation history
             st.session_state['conversation_history'].append(f"User: {userinput}")
@@ -249,10 +275,8 @@ else:
             response = get_completion(prompt)
 
             # Log the token usage
-            log_token_usage(userinput, response)
-
-            # Summarize user input and generate questions
             summary_and_questions = summarize_and_generate_questions(userinput)
+            log_token_usage(userinput, response, summary_and_questions)
 
             # Provide summary and questions to the user
             st.chat_message("assistant", avatar=None).write(summary_and_questions)
