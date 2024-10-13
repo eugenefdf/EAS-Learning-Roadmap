@@ -21,7 +21,7 @@ bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 st.title("EAS Learning Roadmap")
 
 # Sidebar for navigation
-page = st.sidebar.selectbox("Navigate to:", ("Home", "About Us"))
+page = st.sidebar.selectbox("Navigate to:", ("Home", "About Us", "Methodology", "Token Counter"))
 
 # Only show Home page content if 'Home' is selected
 if page == "Home":
@@ -40,6 +40,12 @@ bi_df = clean_dataframe(bi_df)
 if page == "About Us":
     display_about_us()
 
+elif page == "Methodology":
+    display_methodology()
+
+elif page == "Token Counter":
+    display_token_counter()
+    
 else:
     # Create filters for Sector and Dimension/Learning Area below the title
     unique_sectors = bi_df['Sector'].unique()
