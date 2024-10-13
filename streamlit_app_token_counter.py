@@ -64,7 +64,4 @@ def display_token_counter():
     if st.button("Clear Log"):
         st.session_state['token_log'] = []  # Clear the log
         st.success("Token log cleared.")
-    # Button to clear the log
-  if st.button("Clear Log"):
-    st.session_state['token_log'] = []  # Clear the log
-    st.success("Token log cleared.")
+ 
