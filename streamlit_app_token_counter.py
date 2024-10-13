@@ -44,10 +44,9 @@ def display_token_counter():
     else:
         st.write("No token usage data available yet.")
 
-def log_token_usage(user_input, response):
-    """Log the token usage for user input and assistant response."""
-    # Calculate token usage
-    tokens_used = count_tokens(user_input) + count_tokens(response)
+def log_token_usage(user_input, response, summary_and_questions):
+    """Log the token usage for user input, assistant response, and summary/questions."""
+    tokens_used = count_tokens(user_input) + count_tokens(response) + count_tokens(summary_and_questions)
     estimated_cost = estimate_cost(tokens_used)
 
     # Append the log entry to the session state
