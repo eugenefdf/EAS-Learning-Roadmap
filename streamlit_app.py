@@ -49,13 +49,13 @@ def get_completion(prompt):
 # Function to check for malicious input using the LLM
 def check_malicious_input_with_llm(user_input):
     """Check for malicious user input using the LLM."""
-    llm_prompt = f"Evaluate the following user input for any malicious intent or harmful content: {user_input}"
+    llm_prompt = f"Evaluate the following user input for any malicious intent or harmful content: {user_input}. If you have evaluated that the content is malicious in nature, output Yes. Otherwise, output No. Do not output anything else. "
 
     # Send request to OpenAI API for evaluation
     evaluation_response = get_completion(llm_prompt)
     
     # Here we can define what a harmful or malicious input looks like
-    if "malicious" in evaluation_response.lower() or "harmful" in evaluation_response.lower():
+    if "Yes" in evaluation_response.lower():
         return True
     return False
 
