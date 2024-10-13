@@ -2,7 +2,7 @@ import streamlit as st
 import tiktoken
 
 # Token counting constants
-TOKEN_PRICE = 0.0004  # Example: price per token in USD for OpenAI
+TOKEN_PRICE = 0.00000015  # Example: price per token in USD for OpenAI
 
 # Use the tokenizer for the specific model
 def get_tokenizer():
