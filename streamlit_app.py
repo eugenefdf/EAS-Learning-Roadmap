@@ -1,4 +1,3 @@
-# Load the necessary packages and files as before
 import streamlit as st
 import pandas as pd
 import json
@@ -8,13 +7,12 @@ from streamlit_app_about_us import display_about_us
 from streamlit_app_methodology import display_methodology
 from streamlit_app_token_counter import display_token_counter, log_token_usage
 
-
 ### Start of Functions ###
 
 # Clean the DataFrames (this will run regardless of the selected page)
 def clean_dataframe(df):
     for col in df.select_dtypes(include=['object']).columns:
-        df[col] = df[col].str.strip()
+        df[col] = df[col].str.strip()  # Strip whitespace from object columns
     return df
 
 # Function to check if any month in the list falls within the selected range
@@ -77,8 +75,6 @@ def summarize_and_generate_questions(user_input):
     return summary_response
 
 ### End of Functions ###
-
-
 
 # Access your API key and model name from Streamlit secrets
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
@@ -183,9 +179,7 @@ else:
 
         # Filter based on the selected month range
         if not filtered_programmes_df.empty:
-            filtered_programmes_df = filtered_programmes_df[
-                filtered_programmes_df['Estimated Month of Programme'].apply(lambda x: is_month_in_range(x.split(','), min_month_index, max_month_index, month_map))
-            ]
+            filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Estimated Month of Programme'].apply(lambda x: is_month_in_range(x.split(','), min_month_index, max_month_index, month_map))]
 
         # Filter based on the selected course type
         if selected_course_type != "Select All Courses":
@@ -209,65 +203,34 @@ else:
         if 'conversation_history' not in st.session_state:
             st.session_state['conversation_history'] = []
         if 'token_log' not in st.session_state:
-            st.session_state['token_log'] = []
+            st.session_state['token_log'] = []  # Initialize as an empty list
 
-        st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
-
-        # Handle user input
-        userinput = st.chat_input(placeholder="Tell us more?", key=None)
-
-        if userinput:  # Check if userinput is not None
-            # Check for malicious input using the LLM
-            malicious_check = check_malicious_input_with_llm(userinput)
-            if malicious_check:
-                # Provide a warning if malicious input is detected
-                st.warning("Warning: Your input may contain malicious content and has been blocked.")
-                st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "Yes"})
-                st.stop()  # Stop further processing
-            else:
-                # Log non-malicious input
-                st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "No"})
-
-            # Append valid user input to conversation history
-            st.session_state['conversation_history'].append(f"User: {userinput}")
-
-            # Prepare the conversation history as part of the prompt
-            conversation_context = "\n".join(st.session_state['conversation_history'])
-
-            # Prompt using history and new input
-            prompt = f"""
-                <conversationhistory>
-                {conversation_context}
-                </conversationhistory>
-
-                <userinput>
-                {userinput}
-                </userinput>
-
-                <programmes>
-                {filtered_programmes_df}
-                </programmes>
-
-                Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
-            """
-
-            # Generate response from the chatbot
-            response = get_completion(prompt)
-
-            # Log the token usage
-            summary_and_questions = summarize_and_generate_questions(userinput)
-            log_token_usage(userinput, summary_and_questions, response)
-
-            # Provide summary and questions to the user
-            st.chat_message("assistant", avatar=None).write(summary_and_questions)
-
-            # Update conversation history
-            st.session_state['conversation_history'].append(f"Assistant: {response}")
-
-            # Display the conversation history
-            for message in st.session_state['conversation_history']:
-                if message.startswith("User:"):
-                    st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
+        # Token logging
+        if st.button("Submit"):
+            user_input = st.text_input("Enter your query:")
+            if user_input:
+                # Check for malicious content
+                if check_malicious_input_with_llm(user_input):
+                    st.warning("Your input contains potentially harmful content. Please revise.")
                 else:
-                    st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
+                    # Log the token usage
+                    tokens_used = len(user_input.split())
+                    token_cost = tokens_used * 0.00000015  # Using the defined token price
+                    log_token_usage(tokens_used, token_cost)
+                    st.session_state.token_log.append({'tokens_used': tokens_used, 'cost': token_cost})
+                    # Handle LLM response
+                    llm_response = get_completion(user_input)
+                    st.session_state.conversation_history.append({'user': user_input, 'llm_response': llm_response})
+                    st.write("### LLM Response")
+                    st.write(llm_response)
 
+    # Display token usage history
+    if st.button("View Token Usage Log"):
+        if st.session_state.token_log:
+            st.write("### Token Usage Log")
+            for log_entry in st.session_state.token_log:
+                tokens = log_entry['tokens_used']
+                cost = log_entry['cost']
+                st.write(f"Tokens Used: {tokens}, Cost: ${cost:.10f}")
+        else:
+            st.write("No token usage recorded yet.")
