@@ -64,7 +64,7 @@ def check_malicious_input_with_llm(user_input):
 
 def summarize_and_generate_questions(user_input):
     """Summarize user input and generate questions."""
-    summary_prompt = f"Summarize the following input and generate 3 questions for further inquiry: {user_input}"
+    summary_prompt = f"Summarize the following input and generate 3 questions for further inquiry: {user_input}. Just generate the 3 questions and do not include anything else."
 
     # Send request to OpenAI API for summarization
     summary_response = get_completion(summary_prompt)
