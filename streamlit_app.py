@@ -8,6 +8,9 @@ from streamlit_app_about_us import display_about_us
 from streamlit_app_methodology import display_methodology
 from streamlit_app_token_counter import display_token_counter, log_token_usage
 
+
+### Start of Functions ###
+
 # Clean the DataFrames (this will run regardless of the selected page)
 def clean_dataframe(df):
     for col in df.select_dtypes(include=['object']).columns:
@@ -58,6 +61,23 @@ def check_malicious_input_with_llm(user_input):
     if "Yes" in evaluation_response.lower():
         return True
     return False
+
+def summarize_and_generate_questions(user_input):
+    """Summarize user input and generate questions."""
+    summary_prompt = f"Summarize the following input and generate 3 questions for further inquiry: {user_input}"
+
+    # Send request to OpenAI API for summarization
+    summary_response = get_completion(summary_prompt)
+    
+    # Check if the response is empty or an error message
+    if not summary_response:
+        st.error("Failed to generate summary and questions.")
+        return "No summary generated."
+
+    return summary_response
+
+### End of Functions ###
+
 
 
 # Access your API key and model name from Streamlit secrets
