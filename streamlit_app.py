@@ -1,4 +1,5 @@
 # Load the necessary packages and files as before
+import os
 import streamlit as st
 import pandas as pd
 import json
@@ -7,6 +8,7 @@ import tiktoken
 from streamlit_app_about_us import display_about_us
 from streamlit_app_methodology import display_methodology
 from streamlit_app_token_counter import display_token_counter, log_token_usage
+from dotenv import load_dotenv
 
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
