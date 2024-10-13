@@ -2,7 +2,8 @@ import streamlit as st
 import tiktoken
 
 # Token counting constants
-TOKEN_PRICE = 0.0004  # Example: price per token in USD for OpenAI
+INPUT_TOKEN_PRICE = 0.150 / 1_000_000  # Price per input token in USD
+OUTPUT_TOKEN_PRICE = 0.600 / 1_000_000  # Price per output token in USD
 
 # Use the tokenizer for the specific model
 def get_tokenizer():
@@ -13,20 +14,22 @@ def count_tokens(prompt):
     tokenizer = get_tokenizer()
     return len(tokenizer.encode(prompt))
 
-def estimate_cost(tokens_used):
-    """Estimate the cost based on tokens used."""
-    return tokens_used * TOKEN_PRICE
+def estimate_cost(input_tokens_used, output_tokens_used):
+    """Estimate the cost based on input and output tokens used."""
+    return (input_tokens_used * INPUT_TOKEN_PRICE) + (output_tokens_used * OUTPUT_TOKEN_PRICE)
 
 def log_token_usage(user_input, summary_and_questions, response):
     """Log the token usage for each conversation."""
-    tokens_used = count_tokens(user_input) + count_tokens(response)
-    estimated_cost = estimate_cost(tokens_used)
+    input_tokens_used = count_tokens(user_input)
+    output_tokens_used = count_tokens(response)
+    estimated_cost = estimate_cost(input_tokens_used, output_tokens_used)
 
     # Log the entry
     st.session_state['token_log'].append({
         "user_input": user_input,
-        "summary_and_questions": summary_and_questions,  # Add this line
-        "tokens_used": tokens_used,
+        "summary_and_questions": summary_and_questions,
+        "input_tokens_used": input_tokens_used,
+        "output_tokens_used": output_tokens_used,
         "estimated_cost": estimated_cost,
         "response": response
     })
@@ -58,7 +61,8 @@ def display_token_counter():
 
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
             st.write(f"**Summary and Questions:** {entry.get('summary_and_questions', 'N/A')}")
-            st.write(f"**Tokens Used:** {entry.get('tokens_used', 0)}")
+            st.write(f"**Input Tokens Used:** {entry.get('input_tokens_used', 0)}")
+            st.write(f"**Output Tokens Used:** {entry.get('output_tokens_used', 0)}")
             st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
             st.write(f"**Assistant Response:** {entry.get('response', 'N/A')}")
             st.write("---")  # Separator for readability

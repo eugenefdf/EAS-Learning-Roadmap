@@ -206,68 +206,75 @@ else:
             st.dataframe(filtered_programmes_df[programmes_columns])
 
             # Initialize session state for conversation history and token log
-        if 'conversation_history' not in st.session_state:
-            st.session_state['conversation_history'] = []
+if 'conversation_history' not in st.session_state:
+    st.session_state['conversation_history'] = []
 
-        st.chat_message("assistant", avatar=None).write('Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. In the text box below, please provide any additional information (e.g. preferred mode of learning, preferred month) to streamline your search. If you do not have any additional criteria, you can just indicate: "No additional considerations."')
+if 'token_log' not in st.session_state:
+    st.session_state['token_log'] = []
 
-        # Handle user input
-        userinput = st.chat_input(placeholder="Tell us more?", key=None)
+st.chat_message("assistant", avatar=None).write(
+    'Hi, I am Charlie! Before we begin, please select the roles and/or learning dimensions that you would like course information on. '
+    'In the text box below, please provide any additional information (e.g., preferred mode of learning, preferred month) to streamline your search. '
+    'If you do not have any additional criteria, you can just indicate: "No additional considerations."'
+)
 
-        if userinput:  # Check if userinput is not None
-            # Check for malicious input using the LLM
-            malicious_check = check_malicious_input_with_llm(userinput)
-            if malicious_check:
-                # Provide a warning if malicious input is detected
-                st.warning("Warning: Your input may contain malicious content and has been blocked.")
-                st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "Yes"})
-                st.stop()  # Stop further processing
-            else:
-                # Log non-malicious input
-                st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "No"})
+# Handle user input
+userinput = st.chat_input(placeholder="Tell us more?", key=None)
 
-            # Append valid user input to conversation history
-            st.session_state['conversation_history'].append(f"User: {userinput}")
+if userinput:  # Check if userinput is not None
+    # Check for malicious input using the LLM
+    malicious_check = check_malicious_input_with_llm(userinput)
+    if malicious_check:
+        # Provide a warning if malicious input is detected
+        st.warning("Warning: Your input may contain malicious content and has been blocked.")
+        st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "Yes"})
+        st.stop()  # Stop further processing
+    else:
+        # Log non-malicious input
+        st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "No"})
 
-            # Prepare the conversation history as part of the prompt
-            conversation_context = "\n".join(st.session_state['conversation_history'])
+    # Append valid user input to conversation history
+    st.session_state['conversation_history'].append(f"User: {userinput}")
 
-            # Prompt using history and new input
-            prompt = f"""
-                <conversationhistory>
-                {conversation_context}
-                </conversationhistory>
+    # Prepare the conversation history as part of the prompt
+    conversation_context = "\n".join(st.session_state['conversation_history'])
 
-                <userinput>
-                {userinput}
-                </userinput>
+    # Prompt using history and new input
+    prompt = f"""
+        <conversationhistory>
+        {conversation_context}
+        </conversationhistory>
 
-                <programmes>
-                {filtered_programmes_df}
-                </programmes>
+        <userinput>
+        {userinput}
+        </userinput>
 
-                Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
-            """
+        <programmes>
+        {filtered_programmes_df}
+        </programmes>
 
-            # Generate response from the chatbot
-            response = get_completion(prompt)
+        Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
+    """
 
-            # Summarize questions for logging
-            summary_and_questions = summarize_and_generate_questions(userinput)
+    # Generate response from the chatbot
+    response = get_completion(prompt)
 
-            # Log the token usage and other details
-            log_token_usage(userinput, summary_and_questions, response)
+    # Summarize questions for logging
+    summary_and_questions = summarize_and_generate_questions(userinput)
 
-            # Provide summary and questions to the user
-            st.chat_message("assistant", avatar=None).write(summary_and_questions)
+    # Log the token usage and other details
+    log_token_usage(userinput, summary_and_questions, response)
 
-            # Update conversation history
-            st.session_state['conversation_history'].append(f"Assistant: {response}")
+    # Provide summary and questions to the user
+    st.chat_message("assistant", avatar=None).write(summary_and_questions)
 
-            # Display the conversation history
-            for message in st.session_state['conversation_history']:
-                if message.startswith("User:"):
-                    st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
-                else:
-                    st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
+    # Update conversation history
+    st.session_state['conversation_history'].append(f"Assistant: {response}")
+
+    # Display the conversation history
+    for message in st.session_state['conversation_history']:
+        if message.startswith("User:"):
+            st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
+        else:
+            st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
 
