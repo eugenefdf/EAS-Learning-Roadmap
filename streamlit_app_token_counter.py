@@ -23,14 +23,13 @@ def count_tokens(prompt):
 def estimate_cost(input_tokens_used, output_tokens_used):
     return (input_tokens_used * INPUT_TOKEN_PRICE) + (output_tokens_used * OUTPUT_TOKEN_PRICE)
 
-def log_token_usage(user_input, summary_and_questions, response):
+def log_token_usage(user_input, response):
     input_tokens_used = count_tokens(user_input)
     output_tokens_used = count_tokens(response)
     estimated_cost = estimate_cost(input_tokens_used, output_tokens_used)
 
     st.session_state['token_log'].append({
         "user_input": user_input,
-        "summary_and_questions": summary_and_questions,
         "input_tokens_used": input_tokens_used,
         "output_tokens_used": output_tokens_used,
         "estimated_cost": estimated_cost
@@ -52,8 +51,11 @@ def display_token_counter():
     st.write("### Token Usage Log")
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
+            # Check if the log entry should be skipped
+            if entry.get('summary_and_questions', 'N/A') == "N/A" and entry.get('input_tokens_used', 0) == 0 and entry.get('output_tokens_used', 0) == 0:
+                continue  # Skip this log entry
+
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
-            st.write(f"**Summary and Questions:** {entry.get('summary_and_questions', 'N/A')}")
             st.write(f"**Input Tokens Used:** {entry.get('input_tokens_used', 0)}")
             st.write(f"**Output Tokens Used:** {entry.get('output_tokens_used', 0)}")
             st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
