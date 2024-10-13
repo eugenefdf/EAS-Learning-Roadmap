@@ -254,12 +254,13 @@ else:
             # Generate response from the chatbot
             response = get_completion(prompt)
 
+            # Provide summary and questions to the user
+            st.chat_message("assistant", avatar=None).write(summary_and_questions)
+
             # Log the token usage
             summary_and_questions = summarize_and_generate_questions(userinput)
             log_token_usage(userinput, response, summary_and_questions)
 
-            # Provide summary and questions to the user
-            st.chat_message("assistant", avatar=None).write(summary_and_questions)
 
             # Update conversation history
             st.session_state['conversation_history'].append(f"Assistant: {response}")
