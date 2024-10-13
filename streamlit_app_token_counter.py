@@ -40,6 +40,11 @@ def display_token_counter():
     if 'token_log' not in st.session_state:
         st.session_state['token_log'] = []
 
+    # Button to clear the log
+    if st.button("Clear Log"):
+        st.session_state['token_log'] = []
+        st.success("Token log cleared.")
+
     st.write("### Token Usage Log")
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
