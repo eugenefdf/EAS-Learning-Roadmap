@@ -4,9 +4,9 @@ import pandas as pd
 import json
 import requests
 import tiktoken
-from streamlit_app.about_us import display_about_us
-from streamlit_app.methodology import display_methodology
-from streamlit_app.token_counter import display_token_counter
+from streamlit_app_about_us import display_about_us
+from streamlit_app_methodology import display_methodology
+from streamlit_app_token_counter import display_token_counter
 
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
