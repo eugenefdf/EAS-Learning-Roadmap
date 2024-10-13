@@ -271,7 +271,3 @@ else:
                 else:
                     st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
 
-        # Display token counter
-        if st.button("Show Token Counter"):
-            display_token_counter()
-

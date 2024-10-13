@@ -60,3 +60,8 @@ def display_token_counter():
             st.write("---")  # Separator for readability
     else:
         st.write("No token usage data available yet.")
+
+    # Button to clear the log
+    if st.button("Clear Log"):
+        clear_token_log()
+        st.success("Token log cleared.")
