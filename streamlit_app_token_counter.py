@@ -25,6 +25,9 @@ def log_token_usage(user_input, summary_and_questions, response):
     estimated_cost = estimate_cost(input_tokens_used, output_tokens_used)
 
     # Log the entry
+    if 'token_log' not in st.session_state:
+        st.session_state['token_log'] = []  # Initialize if it doesn't exist
+    
     st.session_state['token_log'].append({
         "user_input": user_input,
         "summary_and_questions": summary_and_questions,
@@ -43,17 +46,13 @@ def clear_token_log():
 
 def display_token_counter():
     """Display the token counter page and log."""
-    # Initialize session state for token log if it doesn't exist
-    if 'token_log' not in st.session_state:
-        st.session_state['token_log'] = []
-
     # Clear log button at the top
     if st.button("Clear Log"):
         clear_token_log()  # Clear the log
         st.success("Token log cleared.")
 
     st.write("### Token Usage Log")
-    if st.session_state['token_log']:
+    if 'token_log' in st.session_state and st.session_state['token_log']:
         for entry in st.session_state['token_log']:
             # Debugging: Print entry to console
             print(entry)  # This will output to your terminal/logs
@@ -66,3 +65,6 @@ def display_token_counter():
             st.write("---")  # Separator for readability
     else:
         st.write("No token usage data available yet.")
+
+# Call the display function to render the token counter
+display_token_counter()
