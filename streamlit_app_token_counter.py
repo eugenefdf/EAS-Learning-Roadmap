@@ -24,13 +24,16 @@ def estimate_cost(input_tokens_used, output_tokens_used):
     return (input_tokens_used * INPUT_TOKEN_PRICE) + (output_tokens_used * OUTPUT_TOKEN_PRICE)
 
 def log_token_usage(user_input, summary_and_questions, response):
+    """Log the token usage for each conversation."""
     input_tokens_used = count_tokens(user_input)
     output_tokens_used = count_tokens(response)
     estimated_cost = estimate_cost(input_tokens_used, output_tokens_used)
 
+    # Log the entry with the output response
     st.session_state['token_log'].append({
         "user_input": user_input,
         "summary_and_questions": summary_and_questions,
+        "response": response,  # Log the output response
         "input_tokens_used": input_tokens_used,
         "output_tokens_used": output_tokens_used,
         "estimated_cost": estimated_cost
@@ -54,6 +57,7 @@ def display_token_counter():
         for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
             st.write(f"**Summary and Questions:** {entry.get('summary_and_questions', 'N/A')}")
+            st.write(f"**Response:** {entry.get('response', 'N/A')}")  # Display the output response
             st.write(f"**Input Tokens Used:** {entry.get('input_tokens_used', 0)}")
             st.write(f"**Output Tokens Used:** {entry.get('output_tokens_used', 0)}")
             st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
