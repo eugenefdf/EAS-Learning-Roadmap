@@ -10,6 +10,13 @@ from streamlit_app_methodology import display_methodology
 from streamlit_app_token_counter import display_token_counter, log_token_usage
 from dotenv import load_dotenv
 
+# Load environment variables from the .env file
+load_dotenv()
+
+# Access your API key and model name
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_MODEL_NAME = os.getenv("OPENAI_MODEL_NAME")
+
 # Load the configuration JSON file from GitHub
 config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
 config_data = requests.get(config_url).json()
@@ -152,46 +159,43 @@ else:
     userinput = st.chat_input(placeholder="Tell us more  ?", key=None, max_chars=None, disabled=False, on_submit=None, args=None, kwargs=None)
 
     # Handle user input
-if userinput:
-    st.session_state['conversation_history'].append(f"User: {userinput}")
+    if userinput:
+        st.session_state['conversation_history'].append(f"User: {userinput}")
 
-    # Prepare the conversation history as part of the prompt
-    conversation_context = "\n".join(st.session_state['conversation_history'])
+        # Prepare the conversation history as part of the prompt
+        conversation_context = "\n".join(st.session_state['conversation_history'])
 
-    # Ensure filtered_programmes_df is a string
-    programmes_string = filtered_programmes_df.to_string(index=False)  # or .to_json() if needed
+        # Ensure filtered_programmes_df is a string
+        programmes_string = filtered_programmes_df.to_string(index=False)  # or .to_json() if needed
 
-    # Prompt using history and new input
-    prompt = f"""
-        <conversationhistory>
-        {conversation_context}
-        </conversationhistory>
+        # Prompt using history and new input
+        prompt = f"""
+            <conversationhistory>
+            {conversation_context}
+            </conversationhistory>
 
-        <userinput>
-        {userinput}
-        </userinput>
+            <userinput>
+            {userinput}
+            </userinput>
 
-        <programmes>
-        {programmes_string}
-        </programmes>
+            <programmes>
+            {programmes_string}
+            </programmes>
 
-        Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
-    """
-    
-    # Generate response from the chatbot
-    response = get_completion(prompt)
+            Your primary role is an assistant chatbot that is to recommend professional development programmes for staff...
+        """
+        
+        # Generate response from the chatbot
+        response = get_completion(prompt)
 
-    st.session_state['conversation_history'].append(f"Assistant: {response}")
+        st.session_state['conversation_history'].append(f"Assistant: {response}")
 
-    # Display the conversation history
-    for message in st.session_state['conversation_history']:
-        if message.startswith("User:"):
-            st.chat_message("user").write(message[6:])
-        elif message.startswith("Assistant:"):
-            st.chat_message("assistant").write(message[11:])
-    
-    # Log token usage
-    log_token_usage(userinput, response)
+        # Display the conversation history
+        for message in st.session_state['conversation_history']:
+            if message.startswith("User:"):
+                st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
+            else:
+                st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
 
 
 
