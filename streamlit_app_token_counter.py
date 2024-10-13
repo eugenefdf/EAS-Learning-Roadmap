@@ -46,8 +46,8 @@ def clear_token_log():
 
 def display_token_counter():
     """Display the token counter page and log."""
-    # Clear log button at the top
-    if st.button("Clear Log"):
+    # Clear log button at the top with a unique key
+    if st.button("Clear Log", key="clear_log_button"):
         clear_token_log()  # Clear the log
         st.success("Token log cleared.")
 
