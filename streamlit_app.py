@@ -90,6 +90,10 @@ else:
             'Estimated Month of Programme',
             'Remarks'
         ]
+
+        # Ensure that only existing columns are selected
+        programmes_columns = [col for col in programmes_columns if col in filtered_programmes_df.columns]
+
         # Month mapping and abbreviations
         month_map = config_data['months']
         month_abbreviations = config_data['month_abbreviations']
@@ -103,8 +107,8 @@ else:
             format="%d"
         )
 
-        min_month_abbr = month_abbreviations[min_month_index - 1]  
-        max_month_abbr = month_abbreviations[max_month_index - 1]  
+        min_month_abbr = month_abbreviations[min_month_index - 1]
+        max_month_abbr = month_abbreviations[max_month_index - 1]
 
         st.write(f"Selected month range: {min_month_abbr} to {max_month_abbr}")
 
@@ -124,12 +128,15 @@ else:
         # Filter based on the selected course type
         if selected_course_type != "Select All Courses":
             if not filtered_programmes_df.empty and selected_columns:
-                course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
+                # Ensure the columns in the mask have the correct prefix
+                course_mask_columns = [f"Type of Course - {col}" for col in selected_columns]
+                course_mask = filtered_programmes_df[course_mask_columns].isin([selected_course_type]).any(axis=1)
                 filtered_programmes_df = filtered_programmes_df[course_mask]
 
         # Filter based on the selected roles, only if any role is selected
         if selected_columns and not filtered_programmes_df.empty:
-            role_mask = filtered_programmes_df[selected_columns].notna().any(axis=1)
+            role_mask_columns = [f"Type of Course - {col}" for col in selected_columns]
+            role_mask = filtered_programmes_df[role_mask_columns].notna().any(axis=1)
             filtered_programmes_df = filtered_programmes_df[role_mask]
 
         # Check if there are still rows after filtering; if empty, display a warning
