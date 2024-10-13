@@ -76,23 +76,14 @@ else:
         if selected_dimension != "Select All Dimension/Learning Areas":
             filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Dimension'] == selected_dimension.replace("Select All Dimension/Learning Areas", "")]
 
-       # Create columns for Programmes DataFrame
-        programmes_columns = [
-            'Programme',
-            'Entry Type (New/ Recurring)',
-            'Sector',
-            'Dimension',
-            'Learning Area'
-        ] + [f"Type of Course - {col}" for col in selected_columns] + [
+        # Create columns for Programmes DataFrame
+        programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
             'Application Basis (Sign up/ Nomination)',
             'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
             'E-learning link',
             'Estimated Month of Programme',
             'Remarks'
         ]
-
-        # Ensure that only existing columns are selected
-        programmes_columns = [col for col in programmes_columns if col in filtered_programmes_df.columns]
 
         # Month mapping and abbreviations
         month_map = config_data['months']
@@ -107,8 +98,8 @@ else:
             format="%d"
         )
 
-        min_month_abbr = month_abbreviations[min_month_index - 1]
-        max_month_abbr = month_abbreviations[max_month_index - 1]
+        min_month_abbr = month_abbreviations[min_month_index - 1]  
+        max_month_abbr = month_abbreviations[max_month_index - 1]  
 
         st.write(f"Selected month range: {min_month_abbr} to {max_month_abbr}")
 
@@ -128,15 +119,12 @@ else:
         # Filter based on the selected course type
         if selected_course_type != "Select All Courses":
             if not filtered_programmes_df.empty and selected_columns:
-                # Ensure the columns in the mask have the correct prefix
-                course_mask_columns = [f"Type of Course - {col}" for col in selected_columns]
-                course_mask = filtered_programmes_df[course_mask_columns].isin([selected_course_type]).any(axis=1)
+                course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
                 filtered_programmes_df = filtered_programmes_df[course_mask]
 
         # Filter based on the selected roles, only if any role is selected
         if selected_columns and not filtered_programmes_df.empty:
-            role_mask_columns = [f"Type of Course - {col}" for col in selected_columns]
-            role_mask = filtered_programmes_df[role_mask_columns].notna().any(axis=1)
+            role_mask = filtered_programmes_df[selected_columns].notna().any(axis=1)
             filtered_programmes_df = filtered_programmes_df[role_mask]
 
         # Check if there are still rows after filtering; if empty, display a warning
