@@ -101,10 +101,10 @@ bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 st.title("EAS Learning Roadmap")
 
 #Disclaimer for safety
-With st.expander("IMPORTANT NOTICE:"):
+with st.expander("IMPORTANT NOTICE:"):
     st.write ("""This web application is developed as a proof-of-concept prototype. The information provided here is NOT intended for actual usage and should not be relied upon for making any decisions, especially those related to financial, legal, or healthcare matters.
-                /n Furthermore, please be aware that the LLM may generate inaccurate or incorrect information. 
-                /n You assume full responsibility for how you use any generated output. Always consult with qualified professionals for accurate and personalized advice.""")
+                \n Furthermore, please be aware that the LLM may generate inaccurate or incorrect information. 
+                \n You assume full responsibility for how you use any generated output. Always consult with qualified professionals for accurate and personalized advice.""")
 
 # Sidebar for navigation
 page = st.sidebar.selectbox("Navigate to:", ("Home", "About Us", "Methodology", "Token Counter"))
