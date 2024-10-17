@@ -90,7 +90,7 @@ config_data = requests.get(config_url).json()
 
 # Load the CSV files
 #programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"
-programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing)Shortened2.csv"
+programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing)Shortened.csv"
 programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 
 
@@ -100,7 +100,7 @@ bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
 # Set the title of the app
 st.title("EAS Learning Roadmap")
 
-#Disclaimer for safety
+#Disclaimer
 with st.expander("IMPORTANT NOTICE:"):
     st.write ("""This web application is developed as a proof-of-concept prototype. The information provided here is NOT intended for actual usage and should not be relied upon for making any decisions, especially those related to financial, legal, or healthcare matters.
                 \n Furthermore, please be aware that the LLM may generate inaccurate or incorrect information. 
