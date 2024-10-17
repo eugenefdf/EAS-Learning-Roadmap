@@ -90,7 +90,7 @@ config_data = requests.get(config_url).json()
 
 # Load the CSV files
 #programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"
-programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing)Shortened.csv"
+programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing)Shortened2.csv"
 programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 
 
