@@ -217,8 +217,8 @@ else:
         json_filtereddata = filtered_programmes_df[programmes_columns].to_json(orient='records')
 
         # Display the JSON data in Streamlit
-        st.write("Table Converted to JSON Format:")
-        st.json(json_filtereddata)
+        #st.write("Table Converted to JSON Format:")
+        #st.json(json_filtereddata)
         
         # Check if any roles are selected before displaying the chatbot
         if selected_columns:
