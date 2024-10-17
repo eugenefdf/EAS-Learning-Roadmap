@@ -280,7 +280,7 @@ else:
                     3. Application Basis indicates how officers can sign up. 
                     4. Mode indicates how the programme is conducted, options are e-Learning, F2F (which means in person), online or hybrid.
                     5. E-learning link indicates the URL for officers to access content. It should only be displayed if the 'Mode' is 'e-Learning'.
-                    6. Estimated Month of Programme indicates when the programme will be conducted.
+                    6. Estimated Month of Programme indicates when the programme will be conducted. If it is indicated that the programme runs "All year round", it is a recommnedation if the user asks for courses in January, February, March, April, May, June, July, August, September, October, November, December.
                     7. Remarks indicates other comments that may be helpful for the officer.
                     Present information as such: Programme, Application Basis, Mode, e-learning link, estimated month of programme, remarks. 
                     Unless alternative instructions are given in the <userinput> list all programmes that are relevant. If there are no programmes that are relevant, you can response "Based on your selection criteria and message, there are no relevant programmes. You may wish to try again with a broader set of requirements." 
