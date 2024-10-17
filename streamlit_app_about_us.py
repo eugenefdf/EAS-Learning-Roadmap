@@ -11,18 +11,18 @@ def display_about_us():
                 \n 3. Efficiency Enhancement: Streamline the process of finding and organising professional learning opportunities, significantly reducing time spent on these tasks.
     """)
 
-st.subheader("Data Sources")
-st.write("""We refer to the competency framework and learning roadmap provided by HR and the EAS Professional Development Unit.
+    st.subheader("Data Sources")    
+    st.write("""We refer to the competency framework and learning roadmap provided by HR and the EAS Professional Development Unit.
         """)
 
-st.subheader("Features")
-st.write("""The resultant product includes the following features:
+    st.subheader("Features")
+    st.write("""The resultant product includes the following features:
             \n 1. Ability for user to look at courses for multiple officer groups (this may be helpful for SAT who are in a supervisory role).
             \n 2. Ability for user to look at specific selector, learning dimension, course type and preferred month of learning. This would help the user quickly narrow their search options.
             \n 3. Ability for user to include other considerations that they may have to better refine options according to their needs.
             """)
 
-#Welcome to the EAS Learning Roadmap! 
+        #Welcome to the EAS Learning Roadmap! 
         #Our platform is designed to help EAS officers navigate their professional development journey with ease.
         
         #Here, you can find courses and training programmes that align with your role and learning preferences. 
