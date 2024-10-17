@@ -64,7 +64,7 @@ def get_completion(prompt):
 
 def summarize_and_generate_questions(user_input):
     """Summarize user input and generate questions."""
-    summary_prompt = f"Summarize the following input and generate 3 questions for further inquiry: {user_input}. Just generate the 3 questions and do not include anything else."
+    summary_prompt = f"Summarize the following input and generate a maximum of 3 questions for further inquiry: {user_input}. Just generate a maximum of 3 questions and do not include anything else."
 
     # Send request to OpenAI API for summarization
     summary_response = get_completion(summary_prompt)
@@ -90,7 +90,7 @@ config_data = requests.get(config_url).json()
 
 # Load the CSV files
 #programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing).csv"
-programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing)Shortened.csv"
+programmes_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/SAT%20Learning%20Roadmap_FY24_3%20Sep%2024%20(For%20Testing)Shortened3.csv"
 programmes_df = pd.read_csv(programmes_url, encoding='ISO-8859-1')
 
 
@@ -275,13 +275,14 @@ else:
                     Based on the <userinput> and <conversationhistory>, identify the most relevant professional development options from the <programmes>. 
                     Provide advice as if you are from the human resource department. Keep the tone formal but helpful. 
                     Here is the explaination for the keys in the json in <programmes>. 
-                    1. Programme is the course title. Always display this in full, including information in [].
-                    2. Entry Type indicates which are the new courses. 
-                    3. Application Basis indicates how officers can sign up. 
-                    4. Mode indicates how the programme is conducted, options are e-Learning, F2F (which means in person), online or hybrid.
+                    1. 'Programme' is the course title. Always display this in full, including information in [].
+                    2. 'Entry Type' indicates which are the new courses. Options are 'New' or 'Recurring'.
+                    3. Application Basis indicates how officers can sign up. Options are 'Nomination only' or 'Sign up'.
+                    4. Mode indicates how the programme is conducted, options are 'e-Learning', 'F2F' (which means in person).
                     5. E-learning link indicates the URL for officers to access content. It should only be displayed if the 'Mode' is 'e-Learning'.
-                    6. Estimated Month of Programme indicates when the programme will be conducted. If it is indicated that the programme runs "All year round", it is a recommnedation if the user asks for courses in January, February, March, April, May, June, July, August, September, October, November, December.
+                    6. Estimated Month of Programme indicates when the programme will be conducted. If it is indicated that the programme runs "All year round", include the programme in the recommendation if the user asks for courses in January, February, March, April, May, June, July, August, September, October, November, December.
                     7. Remarks indicates other comments that may be helpful for the officer.
+                    If any of the data for the above keys is null, do not make assumptions on what might be a possible data for the key.
                     Present information as such: Programme, Application Basis, Mode, e-learning link, estimated month of programme, remarks. 
                     Unless alternative instructions are given in the <userinput> list all programmes that are relevant. If there are no programmes that are relevant, you can response "Based on your selection criteria and message, there are no relevant programmes. You may wish to try again with a broader set of requirements." 
             
