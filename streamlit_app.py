@@ -213,6 +213,13 @@ else:
             st.write("### Available Programmes")
             st.dataframe(filtered_programmes_df[programmes_columns])
 
+        #Convert filtered df to json
+        json_filtereddata = filtered_programmes_df[programmes_columns].to_json(orient='records')
+
+        # Display the JSON data in Streamlit
+        st.write("Table Converted to JSON Format:")
+        st.json(json_filtereddata)
+        
         # Check if any roles are selected before displaying the chatbot
         if selected_columns:
             # Initialize session state for conversation history and token log
@@ -261,13 +268,13 @@ else:
                     </userinput>
 
                     <programmes>
-                    {filtered_programmes_df}
+                    {json_filtereddata}
                     </programmes>
 
                     Your primary role is an assistant chatbot that is to recommend professional development programmes for staff. 
                     Based on the <userinput> and <conversationhistory>, identify the most relevant professional development options from the <programmes>. 
                     Provide advice as if you are from the human resource department. Keep the tone formal but helpful. 
-                    Here is the explaination for the column headers in the <programmes> dataframe. 
+                    Here is the explaination for the keys in the json in <programmes>. 
                     1. Programme is the course title. Always display this in full, including information in [].
                     2. Entry Type indicates which are the new courses. 
                     3. Application Basis indicates how officers can sign up. 
