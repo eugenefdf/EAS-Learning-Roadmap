@@ -145,7 +145,7 @@ else:
             selected_columns.append(full_column)
 
     # Filter for Course Types
-    course_types = ['Select All Courses', 'Mandatory', 'Essential', 'Optional']
+    course_types = ['Select All Courses', 'Mandatory', 'Recommended', 'Optional']
     selected_course_type = st.selectbox("Select Type of Courses", options=course_types)
 
     # Check if any roles are selected
