@@ -97,7 +97,7 @@ def summarize_and_generate_questions(user_input):
 ### End of Functions ###
 
 # Access your Password, API key and model name from Streamlit secrets
-password = st.secrets["password"]
+PW = st.secrets["PW"]
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 OPENAI_MODEL_NAME = st.secrets["OPENAI_MODEL_NAME"]
 
