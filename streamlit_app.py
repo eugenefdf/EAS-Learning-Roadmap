@@ -338,8 +338,8 @@ if authenticate():
                             st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
                         else:
                             st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
-                else:
+                #else:
                     # Show a message in the chat indicating that roles need to be selected
-                    st.chat_message("assistant", avatar=None).write("Please select at least one role to enable the chatbot.")
+                    #st.chat_message("assistant", avatar=None).write("Please select at least one role to enable the chatbot.")
 else:
     st.warning("Please enter the correct password to access the app.")
