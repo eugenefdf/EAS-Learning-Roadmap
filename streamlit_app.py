@@ -171,6 +171,9 @@ if authenticate():
         # Adjust selected columns to match the DataFrame naming convention
         adjusted_columns = [f"Course Requirements - {role}" for role in selected_columns]
 
+        # Filter out columns that do not exist in the DataFrame
+        adjusted_columns = [col for col in adjusted_columns if col in programmes_df.columns]
+
         # Filter for Course Types
         course_types = ['Select All Courses', 'Mandatory', 'Recommended', 'Optional']
         selected_course_type = st.selectbox("Select Type of Courses", options=course_types)
