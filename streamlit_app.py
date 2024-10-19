@@ -21,7 +21,7 @@ def authenticate():
     if not st.session_state.authenticated:
         password = st.text_input("Enter Password", type="password")
         if st.button("Login"):
-            if password == PASSWORD:
+            if password == PW:
                 st.session_state.authenticated = True
                 st.success("Authentication successful!")
             else:
