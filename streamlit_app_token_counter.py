@@ -24,14 +24,31 @@ def estimate_cost(input_tokens_used, output_tokens_used):
     return (input_tokens_used * INPUT_TOKEN_PRICE) + (output_tokens_used * OUTPUT_TOKEN_PRICE)
 
 def log_token_usage(user_input, summary_and_questions, response):
+    # Combine user input and conversation history for context token counting
+    conversation_context = "\n".join(st.session_state['conversation_history'])
+    full_prompt = f"""
+        <conversationhistory>
+        {conversation_context}
+        </conversationhistory>
+
+        <userinput>
+        {userinput}
+        </userinput>
+
+        <programmes>
+        {json_filtereddata}
+        </programmes>
+    """
     input_tokens_used = count_tokens(user_input)
+    context_tokens_used = count_tokens(full_prompt)  # Count tokens in the full prompt
     output_tokens_used = count_tokens(response)
-    estimated_cost = estimate_cost(input_tokens_used, output_tokens_used)
+    estimated_cost = estimate_cost(input_tokens_used + context_tokens_used, output_tokens_used)
 
     st.session_state['token_log'].append({
         "user_input": user_input,
         "summary_and_questions": summary_and_questions,
         "input_tokens_used": input_tokens_used,
+        "context_tokens_used": context_tokens_used,  # Add context token count
         "output_tokens_used": output_tokens_used,
         "estimated_cost": estimated_cost
     })
@@ -59,6 +76,7 @@ def display_token_counter():
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
             st.write(f"**Summary and Questions:** {entry.get('summary_and_questions', 'N/A')}")
             st.write(f"**Input Tokens Used:** {entry.get('input_tokens_used', 0)}")
+            st.write(st.write(f"**Context Tokens Used:** {entry.get('context_tokens_used', 0)}"))
             st.write(f"**Output Tokens Used:** {entry.get('output_tokens_used', 0)}")
             st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
             st.write("---")
