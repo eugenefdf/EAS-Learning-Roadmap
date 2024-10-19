@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Programme,Entry Type,Sector,Dimension,Learning Area,Course Requirement for Vice Principal (Admin) [VP(A)],Course Requirement for Adminstrative Manager [AM],Course Requirement for Operation Manager [OM],Course Requirement for Assistant Operation Manager/SLT [Assistant OM/SLT],Course Requirement for ICT Manager,Course Requirement for Cluster ICT Manager,Course Requirement for STEM Instructor (Workshop),Course Requirement for STEM Instructor (Laboratory),Course Requirement for Corporate Support Officer [CSO],Course Requirement for Admin Executive [AE],Course Requirement for Technical Support Officer (Audio Visual) [TSO (AV)],Course Requirement for Operation Support Officer [OSO],Application Basis,Mode,E-learning Link,Estimated Month of Programme,Remarks
 [P101] Basic Understanding of Procurement Processes,Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,Mandatory ,Mandatory ,,,Mandatory ,,Nomination only,E-learning,OPAL2.0,All year round,E-learning on OPAL2.0. *Mandatory for TSOs officers with GeBIZ account
 [P201] Processes and Scenarios in Procurement,Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,Mandatory ,,Mandatory ,Mandatory ,,,Mandatory ,,,,Sign up,E-learning,OPAL2.0,All year round,E-learning on OPAL2.0
@@ -13,6 +14,23 @@ B5: Procurement Ethics & Social Responsibility (SUSS),Recurring,Procurement Mana
 B6: Basic Project Mgt and Best Practices (DSTA),Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,,,,,,,Sign up,F2F,,June,Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
 C4: Advanced Project Management (DSTA),Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,,,,,,,Sign up,F2F,,January,Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
 VP Financial Management Course in the VP Learning Series (School Division): Finance & Procurement Division (FPD) section on School Procurement Procedures ,Recurring,Procurement Management,Procurement Sourcing,Operations,Recommended,Optional,,,,,,,,,,,Sign up,F2F,,August,Refer to email from Human Resource Group (HRG) to new VPAs
+=======
+Programme,Entry Type,Sector,Dimension,Learning Area,Course Requirement for Vice Principal (Admin) [VP(A)],Course Requirement for Adminstrative Manager [AM],Course Requirement for Operation Manager [OM],Course Requirement for Assistant Operation Manager/SLT [Assistant OM/SLT],Course Requirement for ICT Manager,Course Requirement for Cluster ICT Manager,Course Requirement for STEM Instructor (Workshop),Course Requirement for STEM Instructor (Laboratory),Course Requirement for Corporate Support Officer [CSO],Course Requirement for Admin Executive [AE],Course Requirement for Technical Support Officer (Audio Visual) [TSO (AV)],Course Requirement for Operation Support Officer [OSO],Application Basis,Mode,E-learning Link,Estimated Month of Programme,Remarks
+[P101] Basic Understanding of Procurement Processes,Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,Mandatory ,Mandatory ,,,Mandatory ,,Nomination only,E-learning,OPAL2.0,All year round,E-learning on OPAL2.0. *Mandatory for TSOs officers with GeBIZ account
+[P201] Processes and Scenarios in Procurement,Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,Mandatory ,,Mandatory ,Mandatory ,,,Mandatory ,,,,Sign up,E-learning,OPAL2.0,All year round,E-learning on OPAL2.0
+[P202] Oversight of Procurement,Recurring,Procurement Management,Procurement Policy/Plans,Plans,Mandatory ,Mandatory ,,,,,,,,,,,Sign up,E-learning,OPAL2.0,All year round,E-learning on OPAL2.0
+A1: Procurement E-Learning 1.1 (CSC),Recurring,Procurement Management,Procurement Policy/Plans,Plans,Optional,,Optional,,Optional,Optional,,,Optional,,,,Sign up,F2F,csc.gov.sg,January,"Civil Service College (CSC)
+csc.gov.sg"
+B1: Step Up Procurement: An Intermediate Course,Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,,,,,,,Sign up,F2F,csc.gov.sg,September,"Civil Service College (CSC)
+csc.gov.sg"
+B2: IPM Course & Toolkit for Procurement Officers (IPOS),Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,,,,,,,Sign up,F2F,ipos.gov.sg,September,"Intellectual Property Office of Singapore (IPOS)
+ipos.gov.sg"
+B3: Contract & Agency Law (SUSS),Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,,,,,,,Sign up,F2F,,"September, December",Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+B5: Procurement Ethics & Social Responsibility (SUSS),Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,,,,,,,Sign up,F2F,,"June, July, August",Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+B6: Basic Project Mgt and Best Practices (DSTA),Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,,,,,,,Sign up,F2F,,June,Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+C4: Advanced Project Management (DSTA),Recurring,Procurement Management,Procurement Policy/Plans,Plans,,,,,,,,,,,,,Sign up,F2F,,January,Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+VP Financial Management Course in the VP Learning Series (School Division): Finance & Procurement Division (FPD) section on School Procurement Procedures ,Recurring,Procurement Management,Procurement Sourcing,Operations,Recommended,Optional,,,,,,,,,,,Sign up,F2F,,August,Refer to email from Human Resource Group (HRG) to new VPAs
+>>>>>>> 1c3ec0af8589649f520494d15bcc3f8170a11fa3
 "GeBIZ 2.0 E-Learning (LEARN by CSC)
 - Introduction to GeBIZ 2.0 (GBZE1)  [NEW]
 - Approval of Requirements (AOR) (GBZE2) [NEW]
@@ -27,6 +45,7 @@ VP Financial Management Course in the VP Learning Series (School Division): Fina
 - Direct Contracting (GBE11)
 - Catalogue Administration (GBE12)
 - GeBIZ Administration (GBE13)",Recurring,Procurement Management,Procurement Sourcing,Operations,,,Mandatory ,,Mandatory ,Mandatory ,Mandatory ,Mandatory ,Mandatory ,Mandatory ,Mandatory ,,Sign up,F2F,csc.gov.sg,December,"Civil Service College (CSC)
+<<<<<<< HEAD
 csc.gov.sg *Mandatory for officers who has GeBIZ account"
 Evaluation Methodologies for Public Sector Procurement (CSC),Recurring,Procurement Management,Procurement Sourcing,Operations,,,,,,,,,,Optional,,,Sign up,F2F,csc.gov.sg,September,"Civil Service College (CSC)
 csc.gov.sg"
@@ -36,4 +55,15 @@ B4: Procurement Operations (SUSS),New,Procurement Management,Procurement Sourcin
 *Or any of the following: Construction and Facilities Management, Research and Development, Systems Integrations and Development, Operations and Support and Public Private Partnership.",Recurring,Procurement Management,Procurement Sourcing,Operations,,Recommended,,,,,,,,Optional,,,Sign up,F2F,,December,Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
 C1: Category Management & Supplier Evaluation (SUSS),Recurring,Procurement Management,Procurement Sourcing,Operations,,,,,,,,,,,,,Sign up,F2F,,"June, July, August",Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
 C3: Supplier Relationship Management (SUSS),Recurring,Procurement Management,Procurement Sourcing,Operations,,,,,,,,,,,,,Nomination only,F2F,,November,Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+=======
+csc.gov.sg *Mandatory for officers who has GeBIZ account"
+Evaluation Methodologies for Public Sector Procurement (CSC),Recurring,Procurement Management,Procurement Sourcing,Operations,,,,,,,,,,Optional,,,Sign up,F2F,csc.gov.sg,September,"Civil Service College (CSC)
+csc.gov.sg"
+B4: Procurement Operations (SUSS),New,Procurement Management,Procurement Sourcing,Operations,,,,,,,,,,Optional,,,Sign up,F2F,,"October, December",Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+"B7: Commodities Purchase, Publicity, Consultancy and Mgt Svcs* (DSTA) 
+
+*Or any of the following: Construction and Facilities Management, Research and Development, Systems Integrations and Development, Operations and Support and Public Private Partnership.",Recurring,Procurement Management,Procurement Sourcing,Operations,,Recommended,,,,,,,,Optional,,,Sign up,F2F,,December,Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+C1: Category Management & Supplier Evaluation (SUSS),Recurring,Procurement Management,Procurement Sourcing,Operations,,,,,,,,,,,,,Sign up,F2F,,"June, July, August",Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+C3: Supplier Relationship Management (SUSS),Recurring,Procurement Management,Procurement Sourcing,Operations,,,,,,,,,,,,,Nomination only,F2F,,November,Submit registration form to Singapore Univiersity of Social Sciences: cet@suss.edu.sg
+>>>>>>> 1c3ec0af8589649f520494d15bcc3f8170a11fa3
 Managing Conflict,New,Human Resource,Human Resource,Relationship Management,Optional,,,,,,,,,,,,,,,,
