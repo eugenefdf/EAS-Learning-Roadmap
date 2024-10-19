@@ -13,13 +13,6 @@ if 'selected_columns' not in st.session_state:
 if 'token_log' not in st.session_state:
     st.session_state['token_log'] = []
 
-#Text & Title
-def display_token_counter():
-    st.title("Token Counter")
-    st.write("""
-      The token counter is used for the purpose of cost evaluation and not meant for the end user's usage. All values and costs displayed here are based on an estimate. 
-    """)
-
 def get_tokenizer():
     return tiktoken.encoding_for_model("gpt-4o-mini")
 
@@ -56,6 +49,11 @@ def clear_token_log():
 
 def display_token_counter():
     """Display the token counter page and log."""
+    st.title("Token Counter")
+    st.write("""
+      The token counter is used for the purpose of cost evaluation and not meant for the end user's usage. All values and costs displayed here are based on an estimate. 
+    """)
+
     if st.button("Clear Log", key="clear_log_button_1"):
         clear_token_log()
         st.success("Token log cleared.")
