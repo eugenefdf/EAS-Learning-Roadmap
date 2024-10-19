@@ -37,7 +37,7 @@ def log_token_usage(user_input, prompt, json_filtereddata, context, response):
         "context_tokens": context_tokens,
         "json_tokens": json_tokens,
         "response_tokens": response_tokens,
-        "estimated_cost": estimate_cost(prompt_tokens + json_tokens + context_tokens, response_tokens)  # Cost estimation
+        "estimated_cost": estimate_cost(prompt_tokens, response_tokens)  # Cost estimation
     })
 
     # Keep only the last 5 entries
