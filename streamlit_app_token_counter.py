@@ -13,6 +13,13 @@ if 'selected_columns' not in st.session_state:
 if 'token_log' not in st.session_state:
     st.session_state['token_log'] = []
 
+#Text & Title
+def display_token_counter():
+    st.title("Token Counter")
+    st.write("""
+      The token counter is used for the purpose of cost evaluation and not meant for the end user's usage. All values and costs displayed here are based on an estimate. 
+    """)
+
 def get_tokenizer():
     return tiktoken.encoding_for_model("gpt-4o-mini")
 
@@ -39,10 +46,6 @@ def log_token_usage(user_input, prompt, json_filtereddata, context, response):
         "response_tokens": response_tokens,
         "estimated_cost": estimate_cost(prompt_tokens, response_tokens)  # Cost estimation
     })
-
-    # Keep only the last 5 entries
-    if len(st.session_state['token_log']) > 5:
-        st.session_state['token_log'] = st.session_state['token_log'][-5:]
 
     # Keep only the last 5 entries
     if len(st.session_state['token_log']) > 5:
