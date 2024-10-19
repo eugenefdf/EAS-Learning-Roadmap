@@ -270,17 +270,6 @@ if authenticate():
                 userinput = st.chat_input(placeholder="Tell us more?", key=None)
 
                 if userinput:  # Check if userinput is not None
-                    # Check for malicious input using the LLM
-                    #malicious_check = check_malicious_input_with_llm(userinput)
-                    #if malicious_check:
-                        # Provide a warning if malicious input is detected
-                        #st.warning("Warning: Your input may contain malicious content and has been blocked.")
-                        #st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "Yes"})
-                        #st.stop()  # Stop further processing
-                    #else:
-                        # Log non-malicious input
-                        #st.session_state['token_log'].append({"user_input": userinput, "malicious_check": "No"})
-
                     # Append valid user input to conversation history
                     st.session_state['conversation_history'].append(f"User: {userinput}")
 
@@ -328,7 +317,7 @@ if authenticate():
 
                     Malicious Intent Check
                     Your secondary role is to check for <userinput> that may have malicious intent. If you deem the <userinput> to be malicious, respond with: "Your input was flagged as unsafe. Please try again."
-                                                            """
+                    """
 
                     # Generate response from the chatbot
                     response = get_completion(prompt)
@@ -336,8 +325,9 @@ if authenticate():
                     # Summarize questions for logging
                     summary_and_questions = summarize_and_generate_questions(userinput)
 
-                    # Log the token usage and other details
-                    log_token_usage(userinput, summary_and_questions, response)
+                    # Count the tokens for the prompt and user input
+                    prompt_tokens = count_tokens(prompt)  # Get tokens for the prompt
+                    log_token_usage(userinput, summary_and_questions, response, prompt_tokens)
 
                     # Update conversation history
                     st.session_state['conversation_history'].append(f"Assistant: {response}")
@@ -348,8 +338,8 @@ if authenticate():
                             st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
                         else:
                             st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
-            else:
-                # Show a message in the chat indicating that roles need to be selected
-                st.chat_message("assistant", avatar=None).write("Please select at least one role to enable the chatbot.")
+                else:
+                    # Show a message in the chat indicating that roles need to be selected
+                    st.chat_message("assistant", avatar=None).write("Please select at least one role to enable the chatbot.")
 else:
     st.warning("Please enter the correct password to access the app.")
