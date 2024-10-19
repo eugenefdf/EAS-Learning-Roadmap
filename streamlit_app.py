@@ -148,15 +148,15 @@ if authenticate():
 
     else:
         # Create filters for Sector and Dimension/Learning Area below the title
-        unique_sectors = bi_df['Sector'].unique()
+        unique_sectors = programmes_df['Sector'].unique()
         unique_sectors = ['Select All Sectors'] + unique_sectors.tolist()  
         selected_sector = st.selectbox("Select Sector", options=unique_sectors)
 
         # Filter Dimension/Learning Area based on the selected Sector
         if selected_sector == "Select All Sectors":
-            filtered_dimension = bi_df['Dimension/ Learning Area'].unique()
+            filtered_dimension = programmes_df['Dimension'].unique()  # Ensure this matches your actual column name
         else:
-            filtered_dimension = bi_df[bi_df['Sector'] == selected_sector]['Dimension/ Learning Area'].unique()
+            filtered_dimension = programmes_df[programmes_df['Sector'] == selected_sector]['Dimension'].unique()  # Ensure this matches your actual column name
 
         filtered_dimension = ['Select All Dimension/Learning Areas'] + filtered_dimension.tolist()  
         selected_dimension = st.selectbox("Select Dimension/Learning Area", options=filtered_dimension)
@@ -169,7 +169,7 @@ if authenticate():
                 selected_columns.append(full_column)
 
         # Adjust selected columns to match the DataFrame naming convention
-        adjusted_columns = [f"Course Requirements - {role}" for role in selected_columns]
+        adjusted_columns = [f"Course Requirement - {role}" for role in selected_columns]
 
         # Filter out columns that do not exist in the DataFrame
         adjusted_columns = [col for col in adjusted_columns if col in programmes_df.columns]
