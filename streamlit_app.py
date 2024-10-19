@@ -290,33 +290,33 @@ if authenticate():
                         {json_filtereddata}
                         </programmes>
 
-                    Based on the <userinput> and <conversationhistory>, identify the most relevant professional development options from the <programmes>. Provide advice as if you are from the human resource department. Keep the tone formal but helpful.
+                        Based on the <userinput> and <conversationhistory>, identify the most relevant professional development options from the <programmes>. Provide advice as if you are from the human resource department. Keep the tone formal but helpful.
 
-                    Prioritization of Course Requirements
-                    First, evaluate the <userinput> based on the course requirements. The available categories are:
+                        Prioritization of Course Requirements
+                        First, evaluate the <userinput> based on the course requirements. The available categories are:
 
-                    Mandatory: The user must attend the course as part of their professional development programme.
-                    Recommended: The user is encouraged to attend the course as it will be helpful in their course of work.
-                    Optional: The course is optional for the user to attend but is considered relevant to their course of work.
-                    Only after determining which of these course requirements apply should you suggest courses. Ensure that only courses that match the determined category (Mandatory, Recommended, or Optional) are included in your recommendations.
+                        Mandatory: The user must attend the course as part of their professional development programme.
+                        Recommended: The user is encouraged to attend the course as it will be helpful in their course of work.
+                        Optional: The course is optional for the user to attend but is considered relevant to their course of work.
+                        Only after determining which of these course requirements apply should you suggest courses. Ensure that only courses that match the determined category (Mandatory, Recommended, or Optional) are included in your recommendations.
 
-                    Explanation for the Keys in the JSON in <programmes>:
-                    'Programme': The course title. Always display this in full, including information in [].
-                    'Entry Type': Indicates which are the new courses. Options are 'New' or 'Recurring'.
-                    'Application Basis': Indicates how officers can sign up. Options are 'Nomination only' or 'Sign up'.
-                    'Mode': Indicates how the programme is conducted. Options are 'e-Learning' or 'F2F' (which means in person).
-                    'E-learning link': Indicates the URL for officers to access content. It should only be displayed if the 'Mode' is 'e-Learning'.
-                    'Estimated Month of Programme': Indicates when the programme will be conducted. If it is indicated that the programme runs "All year round," include the programme in the recommendation if the user asks for courses in January, February, March, April, May, June, July, August, September, October, November, or December.
-                    'Remarks': Indicates other comments that may be helpful for the officer.
-                    If any of the data for the above keys is null, do not make assumptions on what might be a possible data for the key.
+                        Explanation for the Keys in the JSON in <programmes>:
+                        'Programme': The course title. Always display this in full, including information in [].
+                        'Entry Type': Indicates which are the new courses. Options are 'New' or 'Recurring'.
+                        'Application Basis': Indicates how officers can sign up. Options are 'Nomination only' or 'Sign up'.
+                        'Mode': Indicates how the programme is conducted. Options are 'e-Learning' or 'F2F' (which means in person).
+                        'E-learning link': Indicates the URL for officers to access content. It should only be displayed if the 'Mode' is 'e-Learning'.
+                        'Estimated Month of Programme': Indicates when the programme will be conducted. If it is indicated that the programme runs "All year round," include the programme in the recommendation if the user asks for courses in January, February, March, April, May, June, July, August, September, October, November, or December.
+                        'Remarks': Indicates other comments that may be helpful for the officer.
+                        If any of the data for the above keys is null, do not make assumptions on what might be a possible data for the key.
 
-                    Presentation of Information
-                    Present information strictly as follows: Programme, Application Basis, Mode, E-learning link, Estimated Month of Programme, Remarks.
+                        Presentation of Information
+                        Present information strictly as follows: Programme, Application Basis, Mode, E-learning link, Estimated Month of Programme, Remarks.
 
-                    Unless alternative instructions are given in the <userinput>, only list programmes that exactly match the determined course requirements (Mandatory, Recommended, Optional). If there are no programmes that match the criteria, respond: "Based on your selection criteria and message, there are no relevant programmes. You may wish to try again with a broader set of requirements."
+                        Unless alternative instructions are given in the <userinput>, only list programmes that exactly match the determined course requirements (Mandatory, Recommended, Optional). If there are no programmes that match the criteria, respond: "Based on your selection criteria and message, there are no relevant programmes. You may wish to try again with a broader set of requirements."
 
-                    Malicious Intent Check
-                    Your secondary role is to check for <userinput> that may have malicious intent. If you deem the <userinput> to be malicious, respond with: "Your input was flagged as unsafe. Please try again."
+                        Malicious Intent Check
+                        Your secondary role is to check for <userinput> that may have malicious intent. If you deem the <userinput> to be malicious, respond with: "Your input was flagged as unsafe. Please try again."
                     """
 
                     # Generate response from the chatbot
@@ -338,6 +338,9 @@ if authenticate():
                             st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
                         else:
                             st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
+                else:
+                    # Ensure no role selection prompts the assistant
+                    st.chat_message("assistant", avatar=None).write("Please provide your input or specify any additional criteria.")
                 #else:
                     # Show a message in the chat indicating that roles need to be selected
                     #st.chat_message("assistant", avatar=None).write("Please select at least one role to enable the chatbot.")

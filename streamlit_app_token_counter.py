@@ -1,5 +1,5 @@
 import streamlit as st
-import tiktoken
+import tiktoken  # Make sure you have this imported
 
 # Token counting constants
 INPUT_TOKEN_PRICE = 0.150 / 1_000_000  # Price per input token in USD
