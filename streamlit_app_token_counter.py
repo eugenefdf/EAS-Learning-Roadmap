@@ -1,15 +1,13 @@
 import streamlit as st
-import tiktoken  # Ensure this is imported
+import tiktoken
 
 # Token counting constants
 INPUT_TOKEN_PRICE = 0.150 / 1_000_000  # Price per input token in USD
 OUTPUT_TOKEN_PRICE = 0.600 / 1_000_000  # Price per output token in USD
 
-# Ensure selected_columns is initialized
+# Ensure selected_columns and token_log are initialized
 if 'selected_columns' not in st.session_state:
     st.session_state['selected_columns'] = []
-
-# Ensure token_log is initialized
 if 'token_log' not in st.session_state:
     st.session_state['token_log'] = []
 
@@ -48,13 +46,10 @@ def clear_token_log():
     st.session_state['token_log'] = []
 
 def display_token_counter():
-    """Display the token counter page and log."""
     st.title("Token Counter")
-    st.write("""
-      The token counter is used for the purpose of cost evaluation and not meant for the end user's usage. All values and costs displayed here are based on an estimate. 
-    """)
+    st.write("""The token counter is used for cost evaluation and is not meant for end users. All values and costs displayed here are based on an estimate.""")
 
-    if st.button("Clear Log", key="clear_log_button_1"):
+    if st.button("Clear Log"):
         clear_token_log()
         st.success("Token log cleared.")
 
@@ -72,4 +67,5 @@ def display_token_counter():
         st.write("No token usage data available yet.")
 
 # Call the display function to render the token counter
-display_token_counter()
+if __name__ == "__main__":
+    display_token_counter()
