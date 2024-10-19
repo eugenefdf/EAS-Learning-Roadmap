@@ -303,7 +303,7 @@ if authenticate():
                     response_tokens = count_tokens(response)  # Count output tokens
 
                     # Log token usage
-                    log_token_usage(userinput, prompt, conversation_context, json_filtereddata)
+                    log_token_usage(userinput, prompt, json_filtereddata, conversation_context, response)
 
                     # Update conversation history
                     st.session_state['conversation_history'].append(f"Assistant: {response}")

@@ -62,8 +62,8 @@ def display_token_counter():
         for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
             st.write(f"**Prompt Tokens:** {entry.get('prompt_tokens', 0)}")
-            st.write(f"**Prompt Tokens:** {entry.get('prompt_tokens', 0)}")
             st.write(f"**Context Tokens:** {entry.get('context_tokens', 0)}")
+            st.write(f"**JSON Tokens:** {entry.get('json_tokens', 0)}")
             st.write(f"**Response Tokens:** {entry.get('response_tokens', 0)}")
             st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
             st.write("---")
