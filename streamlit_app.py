@@ -97,13 +97,13 @@ def summarize_and_generate_questions(user_input):
 ### End of Functions ###
 
 # Access your Password, API key and model name from Streamlit secrets
-password = st.secrets["PW"]
+password = st.secrets["password"]
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 OPENAI_MODEL_NAME = st.secrets["OPENAI_MODEL_NAME"]
 
 # Authenticate the user
 if authenticate():
-    
+
     # Load the configuration JSON file from GitHub
     config_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/eas_learning_roadmap_config.json"
     config_data = requests.get(config_url).json()
