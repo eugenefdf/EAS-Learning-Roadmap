@@ -64,7 +64,7 @@ def get_completion(prompt):
 
 def summarize_and_generate_questions(user_input):
     """Summarize user input and generate questions."""
-    summary_prompt = f"Summarize the following input and generate a maximum of 3 questions for further inquiry: {user_input}. Just generate a maximum of 3 questions and do not include anything else."
+    summary_prompt = f"Summarize the following input so that it is easier for the Large Language Model to process and generate a maximum of 3 questions for further inquiry: {user_input}. Just generate a maximum of 3 questions and do not include anything else."
 
     # Send request to OpenAI API for summarization
     summary_response = get_completion(summary_prompt)
