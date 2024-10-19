@@ -1,5 +1,5 @@
 import streamlit as st
-import tiktoken  # Make sure you have this imported
+import tiktoken  # Ensure this is imported
 
 # Token counting constants
 INPUT_TOKEN_PRICE = 0.150 / 1_000_000  # Price per input token in USD
@@ -23,25 +23,27 @@ def count_tokens(text):
 def estimate_cost(input_tokens_used, output_tokens_used):
     return (input_tokens_used * INPUT_TOKEN_PRICE) + (output_tokens_used * OUTPUT_TOKEN_PRICE)
 
-def log_token_usage(user_input, summary_and_questions, response, total_tokens_used):
-    # Count output tokens
-    output_tokens_used = count_tokens(response)
+def log_token_usage(user_input, summary_and_questions, response, prompt, json_filtereddata):
+    # Count tokens for each part
+    summarized_user_input_tokens = count_tokens(summary_and_questions)  # Tokens for summarized user input
+    prompt_tokens = count_tokens(prompt)  # Tokens for the prompt
+    json_tokens = count_tokens(json_filtereddata)  # Tokens for JSON data
+    response_tokens = count_tokens(response)  # Count output tokens
 
-    # Calculate total input tokens (user input + prompt context) and total tokens used
-    input_tokens_used = count_tokens(user_input) + total_tokens_used
-    total_tokens = input_tokens_used + output_tokens_used  # Total tokens used
-
-    # Calculate estimated cost
-    estimated_cost = estimate_cost(input_tokens_used, output_tokens_used)
-
+    # Log the token usage
     st.session_state['token_log'].append({
         "user_input": user_input,
         "summary_and_questions": summary_and_questions,
-        "input_tokens_used": input_tokens_used,
-        "output_tokens_used": output_tokens_used,
-        "total_tokens": total_tokens,  # New field for total tokens
-        "estimated_cost": estimated_cost
+        "summarized_user_input_tokens": summarized_user_input_tokens,
+        "prompt_tokens": prompt_tokens,
+        "json_tokens": json_tokens,
+        "response_tokens": response_tokens,
+        "estimated_cost": estimate_cost(summarized_user_input_tokens + prompt_tokens + json_tokens, response_tokens)  # Cost estimation
     })
+
+    # Keep only the last 5 entries
+    if len(st.session_state['token_log']) > 5:
+        st.session_state['token_log'] = st.session_state['token_log'][-5:]
 
     # Keep only the last 5 entries
     if len(st.session_state['token_log']) > 5:
@@ -61,9 +63,10 @@ def display_token_counter():
         for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
             st.write(f"**Summary and Questions:** {entry.get('summary_and_questions', 'N/A')}")
-            st.write(f"**Input Tokens Used:** {entry.get('input_tokens_used', 0)}")
-            st.write(f"**Output Tokens Used:** {entry.get('output_tokens_used', 0)}")
-            st.write(f"**Total Tokens Used:** {entry.get('total_tokens', 0)}")  # New line for total tokens
+            st.write(f"**Summarized User Input Tokens:** {entry.get('summarized_user_input_tokens', 0)}")
+            st.write(f"**Prompt Tokens:** {entry.get('prompt_tokens', 0)}")
+            st.write(f"**JSON Tokens:** {entry.get('json_tokens', 0)}")
+            st.write(f"**Response Tokens:** {entry.get('response_tokens', 0)}")
             st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
             st.write("---")
     else:

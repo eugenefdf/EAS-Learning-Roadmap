@@ -325,9 +325,14 @@ if authenticate():
                     # Summarize questions for logging
                     summary_and_questions = summarize_and_generate_questions(userinput)
 
-                    # Count the tokens for the prompt and user input
+                    # Count the tokens for the summarized user input, prompt, json data, and response
+                    summarized_user_input_tokens = count_tokens(summary_and_questions)
                     prompt_tokens = count_tokens(prompt)  # Get tokens for the prompt
-                    log_token_usage(userinput, summary_and_questions, response, prompt_tokens)
+                    json_tokens = count_tokens(json_filtereddata)  # Tokens for JSON data
+                    response_tokens = count_tokens(response)  # Count output tokens
+
+                    # Log token usage
+                    log_token_usage(userinput, summary_and_questions, response, prompt, json_filtereddata)
 
                     # Update conversation history
                     st.session_state['conversation_history'].append(f"Assistant: {response}")
@@ -338,9 +343,6 @@ if authenticate():
                             st.chat_message("user", avatar=None).write(message.replace("User:", "").strip())
                         else:
                             st.chat_message("assistant", avatar=None).write(message.replace("Assistant:", "").strip())
-                else:
-                    # Ensure no role selection prompts the assistant
-                    st.chat_message("assistant", avatar=None).write("Please provide your input or specify any additional criteria.")
                 #else:
                     # Show a message in the chat indicating that roles need to be selected
                     #st.chat_message("assistant", avatar=None).write("Please select at least one role to enable the chatbot.")
