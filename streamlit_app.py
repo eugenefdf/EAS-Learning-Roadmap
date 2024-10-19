@@ -23,9 +23,9 @@ def authenticate():
         if st.button("Login"):
             if password == PW:
                 st.session_state.authenticated = True
-                st.success("Authentication successful!")
+                st.success("Authentication successful! Please select a job role.")
             else:
-                st.error("Invalid password")
+                st.error("Invalid password. Please try again.")
     
     return st.session_state.authenticated
 
