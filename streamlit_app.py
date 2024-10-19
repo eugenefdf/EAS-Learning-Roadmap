@@ -153,7 +153,11 @@ if authenticate():
         selected_sector = st.selectbox("Select Sector", options=unique_sectors)
 
         # Filter Dimension/Learning Area based on the selected Sector
-        filtered_dimension = bi_df[bi_df['Sector'] == selected_sector.replace("Select All Sectors", "")]['Dimension/ Learning Area'].unique()
+        if selected_sector == "Select All Sectors":
+            filtered_dimension = bi_df['Dimension/ Learning Area'].unique()
+        else:
+            filtered_dimension = bi_df[bi_df['Sector'] == selected_sector]['Dimension/ Learning Area'].unique()
+
         filtered_dimension = ['Select All Dimension/Learning Areas'] + filtered_dimension.tolist()  
         selected_dimension = st.selectbox("Select Dimension/Learning Area", options=filtered_dimension)
 
@@ -164,12 +168,15 @@ if authenticate():
             if st.sidebar.checkbox(full_column, value=False):
                 selected_columns.append(full_column)
 
+        # Adjust selected columns to match the DataFrame naming convention
+        adjusted_columns = [f"Course Requirements - {role}" for role in selected_columns]
+
         # Filter for Course Types
         course_types = ['Select All Courses', 'Mandatory', 'Recommended', 'Optional']
         selected_course_type = st.selectbox("Select Type of Courses", options=course_types)
 
         # Check if any roles are selected
-        if not selected_columns:
+        if not adjusted_columns:
             st.warning("Please select at least one role to display.")
         else:
             # Create a copy of the original programmes_df for filtering
@@ -177,13 +184,13 @@ if authenticate():
 
             # Check if "Select All" is selected for Sector or Dimension
             if selected_sector != "Select All Sectors":
-                filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Sector'] == selected_sector.replace("Select All Sectors", "")]
+                filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Sector'] == selected_sector]
             
             if selected_dimension != "Select All Dimension/Learning Areas":
-                filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Dimension'] == selected_dimension.replace("Select All Dimension/Learning Areas", "")]
+                filtered_programmes_df = filtered_programmes_df[filtered_programmes_df['Dimension'] == selected_dimension]
 
             # Create columns for Programmes DataFrame
-            programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + selected_columns + [
+            programmes_columns = ['Programme', 'Entry Type (New/ Recurring)', 'Sector', 'Dimension', 'Learning Area'] + adjusted_columns + [
                 'Application Basis (Sign up/ Nomination)',
                 'Mode (Face-to-Face [F2F], E-learning, Hybrid, Resource)',
                 'E-learning link',
@@ -217,13 +224,13 @@ if authenticate():
 
             # Filter based on the selected course type
             if selected_course_type != "Select All Courses":
-                if not filtered_programmes_df.empty and selected_columns:
-                    course_mask = filtered_programmes_df[selected_columns].isin([selected_course_type]).any(axis=1)
+                if not filtered_programmes_df.empty and adjusted_columns:
+                    course_mask = filtered_programmes_df[adjusted_columns].isin([selected_course_type]).any(axis=1)
                     filtered_programmes_df = filtered_programmes_df[course_mask]
 
             # Filter based on the selected roles, only if any role is selected
-            if selected_columns and not filtered_programmes_df.empty:
-                role_mask = filtered_programmes_df[selected_columns].notna().any(axis=1)
+            if adjusted_columns and not filtered_programmes_df.empty:
+                role_mask = filtered_programmes_df[adjusted_columns].notna().any(axis=1)
                 filtered_programmes_df = filtered_programmes_df[role_mask]
 
             # Check if there are still rows after filtering; if empty, display a warning
