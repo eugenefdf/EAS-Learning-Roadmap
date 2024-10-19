@@ -6,7 +6,7 @@ import requests
 import tiktoken
 from streamlit_app_about_us import display_about_us
 from streamlit_app_methodology import display_methodology
-from streamlit_app_token_counter import display_token_counter, log_token_usage
+from streamlit_app_token_counter import display_token_counter, log_token_usage, count_tokens
 
 
 ### Start of Functions ###
@@ -295,18 +295,15 @@ if authenticate():
                     # Generate response from the chatbot
                     response = get_completion(prompt)
 
-                    # Convert the prompt to a string explicitly, if needed
-                    prompt_str = str(prompt)
-
 
                     # Count the tokens for the user input, prompt, json data, and responss
-                    prompt_tokens = count_tokens(prompt_str)  # Get tokens for the prompt
+                    prompt_tokens = count_tokens(prompt)  # Get tokens for the prompt
                     json_tokens = count_tokens(json_filtereddata)  # Tokens for JSON data
                     context_tokens = count_tokens(conversation_context) #Tokens for conversation context
                     response_tokens = count_tokens(response)  # Count output tokens
 
                     # Log token usage
-                    log_token_usage(userinput, prompt_str, conversation_context, json_filtereddata)
+                    log_token_usage(userinput, prompt, conversation_context, json_filtereddata)
 
                     # Update conversation history
                     st.session_state['conversation_history'].append(f"Assistant: {response}")
