@@ -303,13 +303,13 @@ if authenticate():
 
                     Based on the <userinput> and <conversationhistory>, identify the most relevant professional development options from the <programmes>. Provide advice as if you are from the human resource department. Keep the tone formal but helpful.
 
-                    Definitions of Course Requirements
-                    When evaluating course requirements, apply the following definitions consistently:
+                    Prioritization of Course Requirements
+                    First, evaluate the <userinput> based on the course requirements. The available categories are:
 
                     Mandatory: The user must attend the course as part of their professional development programme.
                     Recommended: The user is encouraged to attend the course as it will be helpful in their course of work.
                     Optional: The course is optional for the user to attend but is considered relevant to their course of work.
-                    ONLY include courses that exactly match the requested course requirements.
+                    Only after determining which of these course requirements apply should you suggest courses. Ensure that only courses that match the determined category (Mandatory, Recommended, or Optional) are included in your recommendations.
 
                     Explanation for the Keys in the JSON in <programmes>:
                     'Programme': The course title. Always display this in full, including information in [].
@@ -324,11 +324,11 @@ if authenticate():
                     Presentation of Information
                     Present information strictly as follows: Programme, Application Basis, Mode, E-learning link, Estimated Month of Programme, Remarks.
 
-                    Unless alternative instructions are given in the <userinput>, only list programmes that exactly match the defined course requirements. If there are no programmes that match the criteria, respond: "Based on your selection criteria and message, there are no relevant programmes. You may wish to try again with a broader set of requirements."
+                    Unless alternative instructions are given in the <userinput>, only list programmes that exactly match the determined course requirements (Mandatory, Recommended, Optional). If there are no programmes that match the criteria, respond: "Based on your selection criteria and message, there are no relevant programmes. You may wish to try again with a broader set of requirements."
 
                     Malicious Intent Check
                     Your secondary role is to check for <userinput> that may have malicious intent. If you deem the <userinput> to be malicious, respond with: "Your input was flagged as unsafe. Please try again."
-                                        """
+                                                            """
 
                     # Generate response from the chatbot
                     response = get_completion(prompt)
