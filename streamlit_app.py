@@ -54,9 +54,6 @@ def clean_text(text):
         return text.strip()
     return text
 
-# Apply cleaning function to the entire DataFrame
-bi_df = bi_df.applymap(clean_text)
-
 # Function to filter bi_df based on selected roles, sector, and dimension
 def filter_bi_df(bi_df, selected_roles, selected_sector, selected_dimension):
     filtered_bi_df = bi_df.copy()
