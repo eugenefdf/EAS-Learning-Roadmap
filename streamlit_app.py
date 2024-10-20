@@ -35,10 +35,15 @@ def clean_dataframe(df):
         df[col] = df[col].str.strip()
     return df
 
-# Function to clean unwanted characters from text
+# Function to clean the text in the DataFrame
 def clean_text(text):
-    # Replace specific unwanted characters
-    text = text.replace("f", "'").replace("?", "")
+    if isinstance(text, str):
+        # Replace unwanted characters, such as non-breaking spaces, special symbols, etc.
+        text = text.replace("\u00a0", " ").replace("\u2018", "'").replace("\u2019", "'").replace("\u201c", '"').replace("\u201d", '"').replace("\u2026", "...")
+        # Add more replacements if necessary
+        text = text.replace("", "")  # Remove any strange characters if they appear
+        # Strip leading and trailing whitespace
+        return text.strip()
     return text
 
 # Function to filter bi_df based on selected roles, sector, and dimension
@@ -134,10 +139,11 @@ if authenticate():
     if page == "Home":
         st.write("Welcome to the EAS Learning Roadmap app. Use the sidebar to navigate.")
 
+    # Dataframe & text cleaning
     programmes_df = clean_dataframe(programmes_df)
     bi_df = clean_dataframe(bi_df)
-    bi_df['Behavioural Indicators'] = bi_df['Behavioural Indicators'].apply(clean_text)
-    
+    bi_df = bi_df.applymap(clean_text)
+
     # Define subpages
     if page == "About Us":
         display_about_us()
