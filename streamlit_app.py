@@ -35,6 +35,12 @@ def clean_dataframe(df):
         df[col] = df[col].str.strip()
     return df
 
+# Function to clean unwanted characters from text
+def clean_text(text):
+    # Replace specific unwanted characters
+    text = text.replace("f", "'").replace("?", "")
+    return text
+
 # Function to filter bi_df based on selected roles, sector, and dimension
 def filter_bi_df(bi_df, selected_roles, selected_sector, selected_dimension):
     filtered_bi_df = bi_df.copy()
@@ -130,7 +136,8 @@ if authenticate():
 
     programmes_df = clean_dataframe(programmes_df)
     bi_df = clean_dataframe(bi_df)
-
+    bi_df['Behavioural Indicators'] = bi_df['Behavioural Indicators'].apply(clean_text)
+    
     # Define subpages
     if page == "About Us":
         display_about_us()
