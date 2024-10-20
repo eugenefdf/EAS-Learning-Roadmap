@@ -35,6 +35,24 @@ def clean_dataframe(df):
         df[col] = df[col].str.strip()
     return df
 
+# Function to filter bi_df based on selected roles, sector, and dimension
+def filter_bi_df(bi_df, selected_roles, selected_sector, selected_dimension):
+    filtered_bi_df = bi_df.copy()
+    
+    # Apply sector and dimension filters
+    if selected_sector != "Select All Sectors":
+        filtered_bi_df = filtered_bi_df[filtered_bi_df['Sector'] == selected_sector]
+    
+    if selected_dimension != "Select All Dimension/Learning Areas":
+        filtered_bi_df = filtered_bi_df[filtered_bi_df['Dimension'] == selected_dimension]
+    
+    # Apply role filters - Ensure only the selected roles columns are shown
+    if selected_roles:
+        role_columns = [role for role in selected_roles if role in filtered_bi_df.columns]
+        filtered_bi_df = filtered_bi_df[['Sector', 'Dimension'] + role_columns]
+    
+    return filtered_bi_df
+
 # Function to check if any month in the list falls within the selected range
 def is_month_in_range(months, min_index, max_index, month_map):
     if "All year round" in months:
@@ -155,6 +173,26 @@ if authenticate():
         if not adjusted_columns:
             st.warning("Please select at least one role to display.")
         else:
+             # Check if user selects "Select All" for both Sector and Dimension
+            if selected_sector == "Select All Sectors" or selected_dimension == "Select All Dimension/Learning Areas":
+                st.warning("Please select at least a specific sector and learning dimension to display the behavioural indicator.")
+            else:
+                # Extract values from bi_df based on the selected filters
+                filtered_bi_df = filter_bi_df(bi_df, selected_columns, selected_sector, selected_dimension)
+                if filtered_bi_df.empty:
+                    st.write("No behavioural indicators match the selected filters.")
+                else:
+                    with st.expander("Show Behavioural Indicators (BI)"):
+                        for index, row in filtered_bi_df.iterrows():
+                            sector = row['Sector']
+                            dimension = row['Dimension']
+                            role_values = [f"{role}: {row[role]}" for role in selected_columns if role in row]
+
+                            # Display extracted values
+                            st.write(f"Sector: {sector}, Dimension: {dimension}")
+                            for value in role_values:
+                                st.write(value)
+            
             # Create a copy of the original programmes_df for filtering
             filtered_programmes_df = programmes_df.copy()
 
