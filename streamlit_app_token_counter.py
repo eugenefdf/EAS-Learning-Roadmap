@@ -47,7 +47,7 @@ def clear_token_log():
 
 def display_token_counter():
     st.title("Token Counter")
-    st.write("""The token counter is used for cost evaluation and is not meant for end users. All values and costs displayed here are based on an estimate.""")
+    st.write("""The token counter is used for cost evaluation and is not meant for end users. All values and costs displayed here are based on an estimate (Pricing derived from OpenAI's website - gpt-4o mini as at 20 October 2024).""")
 
     if st.button("Clear Log"):
         clear_token_log()
