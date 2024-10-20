@@ -173,11 +173,11 @@ if authenticate():
         course_types = ['Select All Courses', 'Mandatory', 'Recommended', 'Optional']
         selected_course_type = st.selectbox("Select Type of Courses", options=course_types)
 
-        # Check if any roles are selected
+       # Check if any roles are selected
         if not adjusted_columns:
             st.warning("Please select at least one role to display.")
         else:
-             # Check if user selects "Select All" for both Sector and Dimension
+            # Check if user selects "Select All" for both Sector and Dimension
             if selected_sector == "Select All Sectors" or selected_dimension == "Select All Dimension/Learning Areas":
                 st.warning("Please select at least a specific sector and learning dimension to display the behavioural indicator.")
             else:
@@ -188,12 +188,10 @@ if authenticate():
                 else:
                     with st.expander("Show Behavioural Indicators (BI)"):
                         for index, row in filtered_bi_df.iterrows():
-                            sector = row['Sector']
-                            dimension = row['Dimension/ Learning Area']
-                            role_values = [f"{role}: {row[role]}" for role in selected_columns if role in row]
+                            # Bold the role names and display only the role-related information
+                            role_values = [f"**{role}**: {row[role]}" for role in selected_columns if role in row]
 
                             # Display extracted values
-                            st.write(f"Sector: {sector}, Dimension: {dimension}")
                             for value in role_values:
                                 st.write(value)
             
