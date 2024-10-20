@@ -44,12 +44,12 @@ def filter_bi_df(bi_df, selected_roles, selected_sector, selected_dimension):
         filtered_bi_df = filtered_bi_df[filtered_bi_df['Sector'] == selected_sector]
     
     if selected_dimension != "Select All Dimension/Learning Areas":
-        filtered_bi_df = filtered_bi_df[filtered_bi_df['Dimension'] == selected_dimension]
+        filtered_bi_df = filtered_bi_df[filtered_bi_df['Dimension/Learning Areas'] == selected_dimension]
     
     # Apply role filters - Ensure only the selected roles columns are shown
     if selected_roles:
         role_columns = [role for role in selected_roles if role in filtered_bi_df.columns]
-        filtered_bi_df = filtered_bi_df[['Sector', 'Dimension'] + role_columns]
+        filtered_bi_df = filtered_bi_df[['Sector', 'Dimension/Learning Areas'] + role_columns]
     
     return filtered_bi_df
 
