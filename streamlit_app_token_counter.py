@@ -57,10 +57,10 @@ def display_token_counter():
     if st.session_state['token_log']:
         for entry in st.session_state['token_log']:
             st.write(f"**User Input:** {entry.get('user_input', 'N/A')}")
-            st.write(f"**Context Tokens (based on saved chat history):** {entry.get('context_tokens', 0)}")
-            st.write(f"**JSON Tokens (based on filtered programmes):** {entry.get('json_tokens', 0)}")
-            st.write(f"**Total Input Tokens (User Input + Context + JSON + Prompt):** {entry.get('prompt_tokens', 0)}")
-            st.write(f"**Output Tokens (Generated Response):** {entry.get('response_tokens', 0)}")
+            st.write(f"**Context Tokens:** {entry.get('context_tokens', 0)}")
+            st.write(f"**JSON Tokens:** {entry.get('json_tokens', 0)}")
+            st.write(f"**Total Input Tokens:** {entry.get('prompt_tokens', 0)}")
+            st.write(f"**Output Tokens:** {entry.get('response_tokens', 0)}")
             st.write(f"**Estimated Cost:** ${entry.get('estimated_cost', 0):.8f}")
             st.write("---")
     else:
