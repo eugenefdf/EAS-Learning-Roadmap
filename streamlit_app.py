@@ -38,19 +38,23 @@ def clean_dataframe(df):
 # Function to filter bi_df based on selected roles, sector, and dimension
 def filter_bi_df(bi_df, selected_roles, selected_sector, selected_dimension):
     filtered_bi_df = bi_df.copy()
-    
-    # Apply sector and dimension filters
+
+    # Filter by Sector
     if selected_sector != "Select All Sectors":
         filtered_bi_df = filtered_bi_df[filtered_bi_df['Sector'] == selected_sector]
-    
+
+    # Update this line to match the correct column name
     if selected_dimension != "Select All Dimension/Learning Areas":
-        filtered_bi_df = filtered_bi_df[filtered_bi_df['Dimension/Learning Areas'] == selected_dimension]
+        filtered_bi_df = filtered_bi_df[filtered_bi_df['Dimension'] == selected_dimension]
     
-    # Apply role filters - Ensure only the selected roles columns are shown
+    # Filter by selected roles (modify as needed based on the actual column names for roles)
     if selected_roles:
-        role_columns = [role for role in selected_roles if role in filtered_bi_df.columns]
-        filtered_bi_df = filtered_bi_df[['Sector', 'Dimension/Learning Areas'] + role_columns]
-    
+        role_columns = [f"Course Requirement - {role}" for role in selected_roles]
+        role_columns = [col for col in role_columns if col in filtered_bi_df.columns]
+        if role_columns:
+            role_mask = filtered_bi_df[role_columns].notna().any(axis=1)
+            filtered_bi_df = filtered_bi_df[role_mask]
+
     return filtered_bi_df
 
 # Function to check if any month in the list falls within the selected range
