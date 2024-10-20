@@ -189,7 +189,7 @@ if authenticate():
                     with st.expander("Show Behavioural Indicators (BI)"):
                         for index, row in filtered_bi_df.iterrows():
                             sector = row['Sector']
-                            dimension = row['Dimension']
+                            dimension = row['Dimension/ Learning Area']
                             role_values = [f"{role}: {row[role]}" for role in selected_columns if role in row]
 
                             # Display extracted values
