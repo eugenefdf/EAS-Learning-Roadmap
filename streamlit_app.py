@@ -46,7 +46,6 @@ def clean_text(text):
                 .replace("\u201c", '"')
                 .replace("\u201d", '"')
                 .replace("\u2026", "...")
-                .replace("", "")  # Remove strange characters
                 .replace("f", "'")  # Replace 'f' with single quote
                 .replace("?", ".")  # Replace '?' with '.'
         )
