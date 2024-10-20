@@ -110,7 +110,7 @@ if authenticate():
 
 
     BI_url = "https://raw.githubusercontent.com/eugenefdf/EAS-Learning-Roadmap/main/Behavioural%20Indicators.csv"
-    bi_df = pd.read_csv(BI_url, encoding='ISO-8859-1')
+    bi_df = pd.read_csv(BI_url, encoding='utf-8')
 
     # Set the title of the app
     st.title("EAS Learning Roadmap")
