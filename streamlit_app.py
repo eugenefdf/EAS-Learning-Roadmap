@@ -39,12 +39,23 @@ def clean_dataframe(df):
 def clean_text(text):
     if isinstance(text, str):
         # Replace unwanted characters, such as non-breaking spaces, special symbols, etc.
-        text = text.replace("\u00a0", " ").replace("\u2018", "'").replace("\u2019", "'").replace("\u201c", '"').replace("\u201d", '"').replace("\u2026", "...")
-        # Add more replacements if necessary
-        text = text.replace("", "")  # Remove any strange characters if they appear
+        text = (
+            text.replace("\u00a0", " ")
+                .replace("\u2018", "'")
+                .replace("\u2019", "'")
+                .replace("\u201c", '"')
+                .replace("\u201d", '"')
+                .replace("\u2026", "...")
+                .replace("", "")  # Remove strange characters
+                .replace("f", "'")  # Replace 'f' with single quote
+                .replace("?", ".")  # Replace '?' with '.'
+        )
         # Strip leading and trailing whitespace
         return text.strip()
     return text
+
+# Apply cleaning function to the entire DataFrame
+bi_df = bi_df.applymap(clean_text)
 
 # Function to filter bi_df based on selected roles, sector, and dimension
 def filter_bi_df(bi_df, selected_roles, selected_sector, selected_dimension):
