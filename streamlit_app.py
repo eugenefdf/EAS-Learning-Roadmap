@@ -45,7 +45,7 @@ def filter_bi_df(bi_df, selected_roles, selected_sector, selected_dimension):
 
     # Update this line to match the correct column name
     if selected_dimension != "Select All Dimension/Learning Areas":
-        filtered_bi_df = filtered_bi_df[filtered_bi_df['Dimension'] == selected_dimension]
+        filtered_bi_df = filtered_bi_df[filtered_bi_df['Dimension/ Learning Area'] == selected_dimension]
     
     # Filter by selected roles (modify as needed based on the actual column names for roles)
     if selected_roles:
