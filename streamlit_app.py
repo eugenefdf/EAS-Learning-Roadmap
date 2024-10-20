@@ -48,7 +48,6 @@ def clean_text(text):
                 .replace("\u2026", "...")
                 .replace("", "")  # Remove strange characters
                 .replace("f", "'")  # Replace 'f' with single quote
-                .replace("fs", "'")  # Replace 'f' with single quote
                 .replace("?", ".")  # Replace '?' with '.'
         )
         # Strip leading and trailing whitespace
